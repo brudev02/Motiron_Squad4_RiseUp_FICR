@@ -48,6 +48,7 @@ Principais informações:
   
 ### Exemplos de Indicadores
 
+```text
 |     Indicador        |     Descrição        |
 |---------------------------------------------|
 | Tarefas Pendentes    | Quantidade de atividades ainda não concluídas |
@@ -55,6 +56,7 @@ Principais informações:
 | Documentos Ativos    | Documentos atualmente em acompanhados |
 | Documentos Pendentes | Documentos que necessitam de alguma ação |
 | Desempenho           | Indicadores gerais da organização |
+```
 
 ---
 
