@@ -16,7 +16,7 @@ Em ambientes corporativos, informações importantes costumam ficar distribuída
 
 O Adgestio propõe uma abordagem diferente:
 
-<<Um único painel para visualizar informações importantes da organização e acompanhar suas principais atividades.>>
+<< Um único painel para visualizar informações importantes da organização e acompanhar suas principais atividades. >>
 
 A plataforma possui um dashboard centralizado onde o usuário pode acompanhar indicadores, gerenciar tarefas e consultar o status de documentos.
 
