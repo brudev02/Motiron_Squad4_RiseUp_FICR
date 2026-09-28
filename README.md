@@ -85,10 +85,22 @@ Painel central responsável por apresentar uma visão geral da situação da org
 
 **Funcionalidades planejadas:**
 
-- Listagem
-
+- Listagem de documentos;
+- Identificação do status;
+- Controle de documentos pendentes;
+- Visualização de informações relevantes;
+- Organização por categoria;
+- Acompanhamento de validade e prazos;
+- Identificação de documentos que precisam de atenção.
 
 ### Exemplos de Status
+
+Status| Significado
+🟢 Ativo| Documento válido e em acompanhamento
+🟡 Pendente| Necessita alguma ação
+🔵 Em análise| Documento sendo avaliado
+🔴 Expirado| Documento fora de validade
+⚪ Arquivado| Documento não está mais ativo
 
 ---
 
