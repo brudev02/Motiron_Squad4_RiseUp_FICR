@@ -48,7 +48,7 @@ Principais informações:
   
 ### Exemplos de Indicadores
 
-```text
+```main
 |        Indicador          |        Descrição             |
 |----------------------------------------------------------|
 | Tarefas Pendentes         | Quantidade de atividades ainda não concluídas |
