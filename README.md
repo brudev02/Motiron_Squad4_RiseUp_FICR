@@ -48,13 +48,17 @@ Painel central responsável por apresentar uma visão geral da situação da org
   
 ### Exemplos de Indicadores
 
-|           Indicador                       |        Descrição             |
-|---------------------------------------------------------------------------|
-| Tarefas Pendentes         | Quantidade de atividades ainda não concluídas |
-| Tarefas Concluídas        | Atividades finalizadas                        |
-| Documentos Ativos         | Documentos atualmente em acompanhados         |
-| Documentos Pendentes      | Documentos que necessitam de alguma ação      |
-| Desempenho                | Indicadores gerais da organização             |
+| Indicador                      | Descrição                     |
+| ------------------------------ | ----------------------------- |
+|  Tarefas Pendentes             |  Quantidade de atividades     |
+|                                |  ainda não concluídas         |
+|  Tarefas Concluídas            |  Atividades Finalizads        |
+|  Documentos Ativos             |  Documentos atualmente        |
+|                                |  em acompanhamentos           |
+|  Documentos Pendentes          |  Documentos que necessitam    |
+|                                |  de alguma ação               |
+|  Desempenho                    |  Indicadores gerais da organização |
+
 
 ---
 
