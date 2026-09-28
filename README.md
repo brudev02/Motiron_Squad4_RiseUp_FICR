@@ -95,12 +95,14 @@ Painel central responsável por apresentar uma visão geral da situação da org
 
 ### Exemplos de Status
 
+```main
 Status| Significado
 🟢 Ativo| Documento válido e em acompanhamento
 🟡 Pendente| Necessita alguma ação
 🔵 Em análise| Documento sendo avaliado
 🔴 Expirado| Documento fora de validade
 ⚪ Arquivado| Documento não está mais ativo
+```
 
 ---
 
