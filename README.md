@@ -37,7 +37,7 @@ A plataforma possui um dashboard centralizado onde o usuário pode acompanhar in
 
 Painel central responsável por apresentar uma visão geral da situação da organização.
 
-Principais informações:
+**Principais informações:**
 
 - Indicadores de desempenho;
 - Resumo de tarefas;
@@ -64,7 +64,7 @@ Principais informações:
 
  Módulo destinado ao acompanhamento das atividades corporativas.
 
- Possibilidades:
+ **Possibilidades:**
  
  - Criar tarefas;
  - Visualizar tarefas pedentes;
@@ -76,11 +76,17 @@ Principais informações:
  
 ### Status
 
-```text
-```
+
 ---
 
 ## Acompanhamento de Documentos
+
+Área destinada ao controle e acompanhamento de documentos corporativos.
+
+**Funcionalidades planejadas:**
+
+- Listagem
+
 
 ### Exemplos de Status
 
