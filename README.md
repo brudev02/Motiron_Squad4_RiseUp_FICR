@@ -50,13 +50,10 @@ Painel central responsável por apresentar uma visão geral da situação da org
 
 | Indicador                      | Descrição                     |
 | ------------------------------ | ----------------------------- |
-|  Tarefas Pendentes             |  Quantidade de atividades     |
-|                                |  ainda não concluídas         |
+|  Tarefas Pendentes             |  Quantidade de atividades ainda não concluídas |
 |  Tarefas Concluídas            |  Atividades Finalizads        |
-|  Documentos Ativos             |  Documentos atualmente        |
-|                                |  em acompanhamentos           |
-|  Documentos Pendentes          |  Documentos que necessitam    |
-|                                |  de alguma ação               |
+|  Documentos Ativos             |  Documentos atualmente em acompanhamentos |
+|  Documentos Pendentes          |  Documentos que necessitam de alguma ação |
 |  Desempenho                    |  Indicadores gerais da organização |
 
 
