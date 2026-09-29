@@ -107,9 +107,42 @@ Painel central responsável por apresentar uma visão geral da situação da org
 
 # Arquitetura e Boas Praticas
 
+O projeto foi estruturado buscando seguir princípios utilizados em aplicações modernas de mercado.
+
+A organização combina conceitos de Feature-Driven Development, separação de responsabilidades e princípios associados á Clean Architecture, mantendo a aplicação preparada para futuras evoluções.
+
 ## Princípios Adotados
 
+- Separation of Concerns;
+- Single Responsibility Principle;
+- Componetização;
+- Reutilização de código;
+- Tipagem estrita com TypeScript;
+- Organização por funcionalidades;
+- Baixo acoplamento;
+- Alta coesão;
+- código legível e sustentável;
+- Responsividade;
+- Acessibilidade como preocupação de UX.
+  
 ## Componentização
+
+Elementos recorrentes da interface devem ser transformados em componentes reutilizáveis.
+
+**Exemplos:**
+
+- Button;
+- Card;
+- Modal;
+- Sidebar;
+- Header;
+- Table;
+- StatusBadge;
+- MetricCard;
+- TaskCard;
+- DocumentCard.
+
+Isso evita duplicação de código e facilita a manutenção da aplicação.
 
 ---
 
