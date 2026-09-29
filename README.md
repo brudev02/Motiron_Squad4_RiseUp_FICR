@@ -148,6 +148,14 @@ Isso evita duplicação de código e facilita a manutenção da aplicação.
 
 # Tecnologias Utilizadas
 
+|  Tecnologia  |  Utilização  |
+|--------------|--------------|
+|  Next.js     |  Framework principal da aplicação  |
+|  TypeScript  |  Linguagem principal e tipagem estática  |
+|  HTML5       |  Estrutura semântica das páginas  |
+|  CSS3        |  Estilização e responsividade  |
+|  JavaSript ES6+  |  Recursos e funcionalidades da aplicação  |
+
 ## Stack
 
 ---
