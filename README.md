@@ -165,3 +165,23 @@ Isso evita duplicação de código e facilita a manutenção da aplicação.
 ## Responsabilidade das Principais Pastas
 
 ---
+
+# Roadmap
+
+O projeto foi pensado para evoluir progressivamente de uma aplicação demonstrativa para uma arquitetura cada vez mais próxima de um produto SaaS real.
+
+**Fase 1 - Interface**
+
+**Fase 2 - Funcionalidades**
+
+**Fase 3 - Backend e Dados**
+
+**Fase 4 - Segurança e Autenticação**
+
+**Fase 5 - Evolução Tecnológica**
+
+---
+
+# UX/UI
+
+--
