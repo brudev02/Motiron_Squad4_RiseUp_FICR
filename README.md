@@ -166,7 +166,7 @@ Isso evita duplicação de código e facilita a manutenção da aplicação.
 
 ---
 
-# Roadmap
+# 🗺️ Roadmap
 
 O projeto foi pensado para evoluir progressivamente de uma aplicação demonstrativa para uma arquitetura cada vez mais próxima de um produto SaaS real.
 
@@ -182,6 +182,43 @@ O projeto foi pensado para evoluir progressivamente de uma aplicação demonstra
 
 ---
 
-# UX/UI
+# 🎨 UX/UI
+
+A experiência do usuário é um dos pilares do projeto.
+
+A interface busca utilizar princípios como:
+
+- Hierarquia visual
+- Consistência de componentes
+- Feedback visual
+- Navegação intuitiva
+- Responsividade
+- Legibilidade
+- Acessibilidade
+- Redução de complexidade cognitiva
+
+O objetivo não é apenas criar uma interface visualmente agradável, mas desenvolver uma experiência que permita ao usuário encontrar informações e executar ações com o menor atrito possível.
+
+---
+
+# 🖳 Status do Projeto
+
+> ## Em desenvolvimento
+
+O projeto está em evolução contínua, com novas funcionalidades, melhorias de arquitetura e refinamentos de experiência de usuário sendo adicionados progressivamente.
+
+---
+
+# 📄 Licença
+
+Este projeto possui finalidade educacional e demonstrativa, sendo utilizado para estudos, práticas de desenvolvimento web e demonstração de conhecimentos técnicos.
+
+---
+
+# ⭐ Objetivo Final
+
+> ## Transformar dados e atividades dispersas em uma visão corporativa centralizada, organizada e acionável.
+
+Adgestio - Gestão inteligente em um único painel.
 
 --
