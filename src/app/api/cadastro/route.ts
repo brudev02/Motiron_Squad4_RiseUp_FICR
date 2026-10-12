@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { senhaEmUsoPorOutraConta } from "@/lib/password";
 
 const schema = z
   .object({
@@ -37,6 +38,17 @@ export async function POST(req: Request) {
     if (existe) {
       return NextResponse.json(
         { erros: { email: ["E-mail já cadastrado"] } },
+        { status: 409 }
+      );
+    }
+
+    if (await senhaEmUsoPorOutraConta(senha)) {
+      return NextResponse.json(
+        {
+          erros: {
+            senha: ["Esta senha já está em uso por outra conta. Escolha outra senha."],
+          },
+        },
         { status: 409 }
       );
     }

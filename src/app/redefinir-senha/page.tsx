@@ -1,8 +1,55 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import InputTexto from "@/app/components/InputTexto";
 import InputSenha from "@/app/components/InputSenha";
 import BotaoExtendido from "@/app/components/BotaoExtendido";
 
 export default function RedefinirSenhaPage() {
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+
+  async function handleSubmit(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    setErro("");
+    setSucesso(false);
+    setCarregando(true);
+
+    const formulario = evento.currentTarget;
+    const dados = Object.fromEntries(new FormData(formulario));
+
+    try {
+      const resposta = await fetch("/api/redefinir-senha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados),
+      });
+      const resultado: unknown = await resposta.json();
+
+      if (!resposta.ok) {
+        const mensagem =
+          typeof resultado === "object" &&
+          resultado !== null &&
+          "erro" in resultado &&
+          typeof resultado.erro === "string"
+            ? resultado.erro
+            : "Não foi possível redefinir a senha.";
+
+        setErro(mensagem);
+        return;
+      }
+
+      formulario.reset();
+      setSucesso(true);
+    } catch {
+      setErro("Não foi possível conectar ao servidor. Tente novamente.");
+    } finally {
+      setCarregando(false);
+    }
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#1D2029] px-5 py-10">
       <section className="w-full max-w-lg rounded-2xl bg-[#344D6B] p-8 shadow-xl sm:p-10">
@@ -14,7 +61,14 @@ export default function RedefinirSenhaPage() {
           Crie uma nova senha para sua conta.
         </p>
 
-        <form className="flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <InputTexto
+            label="E-mail cadastrado"
+            nome="email"
+            tipo="email"
+            placeholder="Digite o e-mail da sua conta"
+          />
+
           <InputSenha
             label="Nova senha"
             nome="novaSenha"
@@ -27,9 +81,21 @@ export default function RedefinirSenhaPage() {
             placeholder="Repita a nova senha"
           />
 
+          {erro && (
+            <p role="alert" className="text-sm text-red-300">
+              {erro}
+            </p>
+          )}
+
+          {sucesso && (
+            <p role="status" className="text-sm text-green-300">
+              Senha redefinida com sucesso. Você já pode entrar com a nova senha.
+            </p>
+          )}
+
           <BotaoExtendido
-            texto="Salvar"
-            tipo="button"
+            texto={carregando ? "Salvando..." : "Salvar"}
+            tipo="submit"
           />
         </form>
 
