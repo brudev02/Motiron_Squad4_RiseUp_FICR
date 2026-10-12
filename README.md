@@ -10,7 +10,7 @@ A proposta é representar uma aplicação próxima de um cenário real de mercad
 
 ---
 
-# Sobre o Projeto
+# 💡 Sobre o Projeto
 
 Em ambientes corporativos, informações importantes costumam ficar distribuídas entre diferentes ferramentas, planilhas e sistemas.
 
@@ -20,7 +20,7 @@ O **Adgestio** propõe uma abordagem diferente:
 
 A plataforma possui um dashboard centralizado onde o usuário pode acompanhar indicadores, gerenciar tarefas e consultar o status de documentos.
 
-# Objetivos
+# 🎯 Objetivos
 
 - Centralizar informações corporativas;
 - Facilitar o acompanhamento de atividades;
@@ -29,11 +29,15 @@ A plataforma possui um dashboard centralizado onde o usuário pode acompanhar in
 - Criar uma experiência de uso simples e intuitiva
 - Aplicar conceito de arquitetura e desenvolvimento utilizados no mercado.
 
+# 👥 Público-alvo
+
+A plataforma foi concebida para atender diferentes empresas, independente de um segmento empresarial específico, que necessitem centralizar informações e acompanhar suas unidades, documentos e tarefas.
+
 ---
 
-# Principais Funcionalidades
+# 🔗 Principais Funcionalidades
 
-## Dashboard de Indicadores
+## 📊 Dashboard de Indicadores
 
 Painel central responsável por apresentar uma visão geral da situação da organização.
 
@@ -172,13 +176,45 @@ O projeto foi pensado para evoluir progressivamente de uma aplicação demonstra
 
 **Fase 1 - Interface**
 
+- [x] Estrutura inicial do projeto
+- [x] Definição da identidade visual
+- [x] Dashboard corporativo
+- [x] Componentização da interface
+- [ ] Responsividade completa
+- [ ] Refinamento de UX/UI
+
 **Fase 2 - Funcionalidades**
+- [ ] CRUD de tarefas
+- [ ] CRUD de documentos
+- [ ] Filtros e pesquisas
+- [ ] Sistema de prioridades
+- [ ] Indicadores dinânmicos
+- [ ] Notificações
 
 **Fase 3 - Backend e Dados**
 
+- [ ] Integração com bancos de dados real
+- [ ] API para comunicação com o front-end
+- [ ] Persistência de tarefas
+- [ ] Persistência de documentos
+- [ ] Histórico de alterações
+
 **Fase 4 - Segurança e Autenticação**
 
+- [ ] Sistema de login
+- [ ] Autenticação de usuários
+- [ ] Controle de permissões
+- [ ] Diferentes níveis de acesso
+- [ ] Proteção de rotas
+
 **Fase 5 - Evolução Tecnológica**
+
+- [ ] Novas ferramentas e bibliotecas
+- [ ] Integração com serviços externos
+- [ ] Monitoramento de aplicação
+- [ ] Testes automatizados
+- [ ] Pipeline de CI/CD
+- [ ] Deploy em ambiente de produção
 
 ---
 
@@ -198,6 +234,24 @@ A interface busca utilizar princípios como:
 - Redução de complexidade cognitiva
 
 O objetivo não é apenas criar uma interface visualmente agradável, mas desenvolver uma experiência que permita ao usuário encontrar informações e executar ações com o menor atrito possível.
+
+---
+
+# Visão Técnica
+
+O projeto tem como principais objetivos demonstrar conhecimento em:
+
+<p align="center">
+  Front-end
+  Next.js
+  TypeScript
+  Componetização
+  Arquitetura
+  UX/UI
+  Boas Práticas
+</p>
+
+Mais do que simplesmente construir telas, o projeto busca demonstrar a capacidade de estruturar e evoluir uma aplicação web de maneira organizada e sustentável.
 
 ---
 
