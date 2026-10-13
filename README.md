@@ -37,6 +37,17 @@ A plataforma foi concebida para atender diferentes empresas, independente de um 
 
 # 🔗 Principais Funcionalidades
 
+## Tela de Login
+
+Área destinada á autenticação dos usuários e ao controle de acesso á plataforma.
+
+- Formulário de login com e-mail e senha
+- Validação dos campos obrigatórios
+- Mensagens de erro específicas
+- Feedback visual de sucesso ou falha
+- Redirecionamento de usuários não
+- Autenticados para a tela de login
+
 ## 📊 Dashboard de Indicadores
 
 Painel central responsável por apresentar uma visão geral da situação da organização.
@@ -76,9 +87,21 @@ Painel central responsável por apresentar uma visão geral da situação da org
  - Organizar atividades por categoria;
  - Acompanhar prazos;
  - Identificar tarefas concluídas e pendentes.
- 
-### Status
 
+ ### Regras de status dos documentos
+
+| Status      |      Significado              |
+|-------------|-------------------------------|
+| 🔵 Ativo    | Documento válido e em acompanhamento |
+| 🟡 Pendente | Necessita alguma ação |
+| 🟠 Em análise| Documento sendo avaliado |
+| 🔴 Expirado | Documento fora de validade |
+| 🟢 Concluído | Tarefa Finalizada |
+| ⚪ Arquivado| Documento não está mais ativo | 
+| ⚫ Inativa | Unidade sem permissão para receber novos documentos ou tarefas |
+
+- A **conclusão** de uma tarefa deverá exigir confirmação do usuário, evitando alterações acidentais.
+- Unidade **inativas** deverão apresentar seus documentos e tarefas em modo somente leitura no detalhamento.
 
 ---
 
@@ -95,17 +118,6 @@ Painel central responsável por apresentar uma visão geral da situação da org
 - Organização por categoria;
 - Acompanhamento de validade e prazos;
 - Identificação de documentos que precisam de atenção.
-
-### Exemplos de Status
-
-
-| Status      |      Significado              |
-|-------------|-------------------------------|
-| 🟢 Ativo    | Documento válido e em acompanhamento |
-| 🟡 Pendente | Necessita alguma ação |
-| 🔵 Em análise| Documento sendo avaliado |
-| 🔴 Expirado | Documento fora de validade |
-| ⚪ Arquivado| Documento não está mais ativo |
 
 ---
 
@@ -129,22 +141,18 @@ A organização combina conceitos de Feature-Driven Development, separação de 
 - Responsividade;
 - Acessibilidade como preocupação de UX.
   
-## Componentização
+## Componentes reutilizáveis
 
-Elementos recorrentes da interface devem ser transformados em componentes reutilizáveis.
+A aplicação poderá utilizar componentes compartilhados, como: 
 
-**Exemplos:**
-
-- Button;
-- Card;
-- Modal;
-- Sidebar;
-- Header;
-- Table;
-- StatusBadge;
-- MetricCard;
-- TaskCard;
-- DocumentCard.
+- Button
+- Input
+- Modal
+- Table
+- Badge
+- Sidebar
+- Header
+- MetriCard
 
 Isso evita duplicação de código e facilita a manutenção da aplicação.
 
