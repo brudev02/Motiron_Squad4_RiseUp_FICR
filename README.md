@@ -97,8 +97,8 @@ Painel central responsável por apresentar uma visão geral da situação da org
 | 🟠 Em análise| Documento sendo avaliado |
 | 🔴 Expirado | Documento fora de validade |
 | 🟢 Concluído | Tarefa Finalizada |
-| ⚪ Arquivado| Documento não está mais ativo | 
-| ⚫ Inativa | Unidade sem permissão para receber novos documentos ou tarefas |
+| ⚪ Arquivado | Documento não está mais ativo | 
+| ⚫ Inativa  | Unidade sem permissão para receber novos documentos ou tarefas |
 
 - A **conclusão** de uma tarefa deverá exigir confirmação do usuário, evitando alterações acidentais.
 - Unidade **inativas** deverão apresentar seus documentos e tarefas em modo somente leitura no detalhamento.
