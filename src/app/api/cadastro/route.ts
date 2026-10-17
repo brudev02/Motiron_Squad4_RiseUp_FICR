@@ -46,7 +46,9 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           erros: {
-            senha: ["Esta senha já está em uso por outra conta. Escolha outra senha."],
+            senha: [
+              "Esta senha já está em uso por outra conta. Escolha outra senha.",
+            ],
           },
         },
         { status: 409 }

@@ -78,11 +78,17 @@ export default function CardLogin() {
 
         {erro && <p className="text-sm text-red-300">{erro}</p>}
 
-        <BotaoExtendido texto={carregando ? "Entrando..." : "Entrar"} tipo="submit" />
+        <BotaoExtendido
+          texto={carregando ? "Entrando..." : "Entrar"}
+          tipo="submit"
+        />
       </form>
 
       <div className="mt-6 flex flex-col gap-3 text-center text-sm">
-        <Link href="/redefinir-senha" className="text-indigo-300 hover:text-white">
+        <Link
+          href="/redefinir-senha"
+          className="text-indigo-300 hover:text-white"
+        >
           Esqueceu sua senha?
         </Link>
 
