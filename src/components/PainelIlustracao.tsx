@@ -4,15 +4,14 @@ import type { ReactNode } from "react";
 import { Etapas } from "./Etapas";
 
 type Props = {
-  imagem: string; 
+  imagem: string;
   alt: string;
-  etapa: 1 | 2 | 3;
-  legenda: ReactNode; 
-  acao: ReactNode; 
-  topo?: ReactNode; 
-  className?: string; 
+  etapa?: 1 | 2 | 3;
+  legenda?: ReactNode;
+  acao?: ReactNode;
+  topo?: ReactNode;
+  className?: string;
 };
-
 
 export function PainelIlustracao({
   imagem,
@@ -23,9 +22,12 @@ export function PainelIlustracao({
   topo,
   className = "",
 }: Props) {
+  const mostrarEtapas = etapa !== undefined;
+
   return (
     <aside
-      className={`flex flex-col items-center justify-between gap-6 bg-escuro px-6 py-8 ${className}`}>
+      className={`flex flex-col items-center ${mostrarEtapas ? "justify-between" : "justify-center"} gap-6 bg-escuro px-6 py-8 ${className}`}
+    >
       {topo}
 
       <Image
@@ -34,13 +36,16 @@ export function PainelIlustracao({
         width={480}
         height={400}
         priority
-        className="h-auto w-full max-w-md"/>
+        className="h-auto w-full max-w-md"
+      />
 
-      <div className="flex flex-col items-center gap-3 text-center">
-        <Etapas atual={etapa} />
-        <p className="text-lg leading-snug">{legenda}</p>
-        {acao}
-      </div>
+      {mostrarEtapas && (
+        <div className="flex flex-col items-center gap-3 text-center">
+          <Etapas atual={etapa} />
+          {legenda && <p className="text-lg leading-snug">{legenda}</p>}
+          {acao}
+        </div>
+      )}
     </aside>
   );
 }

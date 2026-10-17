@@ -41,7 +41,9 @@ export async function POST(req: Request) {
 
     if (await senhaEmUsoPorOutraConta(resultado.data.novaSenha, usuario.id)) {
       return NextResponse.json(
-        { erro: "Esta senha já está em uso por outra conta. Escolha outra senha." },
+        {
+          erro: "Esta senha já está em uso por outra conta. Escolha outra senha.",
+        },
         { status: 409 }
       );
     }

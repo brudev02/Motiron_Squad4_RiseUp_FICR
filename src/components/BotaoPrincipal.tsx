@@ -30,7 +30,8 @@ export function BotaoPrincipal({
     <button
       type={type}
       onClick={onClick}
-      className={estilo}>
+      className={estilo}
+    >
       {children}
     </button>
   );
