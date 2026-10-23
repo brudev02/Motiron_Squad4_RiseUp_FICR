@@ -8,6 +8,21 @@ O projeto busca simular uma aplicação SaaS voltada para diferentes empresas, a
 
 ---
 
+# Objetivos
+
+- Centralizar informações de diferentes unidades empresarias.
+- Facilitar o acompanhamento de documentos e suas respectivas validades.
+- Organizar tarefas, prazos e estados de execução.
+- Apresentar indicadores gerais em um dashboard.
+- Garantir uma interface intuitiva, responsiva e consistente.
+- Aplicar boas práticas de desenvolvimento Front-End e Arquitetura de Software.
+
+# Público-Alvo
+
+A plataforma foi concebida para atender diferentes empresas, independentemente de um segmento empresarial específico, que necessitam centralizar informações e acompanhar suas unidades, documentos e tarefas.
+
+---
+
 # Funcionalidades
 
 - **Login:** Autenticação e validação de formularios.
@@ -35,4 +50,26 @@ O projeto busca simular uma aplicação SaaS voltada para diferentes empresas, a
 
 ---
 
+# Roadmap
 
+As etapas abaixo representam o planejamento de evolução do projeto. O status de cada item deverá ser atualizado conforme a implementação real da equipe.
+
+- [x] Configuração do Next.js com TypeScript
+- [x] Definição do design system.
+- [x] Desenvolvimento da tela de login.
+- [ ] Implementação do dashboard.
+- [ ] Desenvolvimento das listagens e dos detalhes.
+- [ ] Implementação das avaliações de formulários
+- [ ] Controle de Status das unidades.
+- [ ] Confirmação de conclusão de tarefas.
+- [ ] Tratamento dos estados de carregamento, erro e ausência de dados.
+- [ ] Garantir responsividade e acessibilidade.
+- [ ] Persistência dos dados em banco de dados.
+
+---
+
+# Status
+
+## Em desenvolvimento
+
+Projeto
