@@ -13,7 +13,7 @@ O projeto busca simular uma aplicação SaaS voltada para diferentes empresas, a
 - **Login:** Autenticação e validação de formularios.
 - **📊 Dashboard:** Visão geral de unidades, documentos e tarefas pendentes.
 - **Gestão de Unidades:** Listagem, pesquisa, filtros e detalhamento de uniades.
-- **Documentos:** Acompanhamento de validade e identificação de vencimentos.
+- **📑 Documentos:** Acompanhamento de validade e identificação de vencimentos.
 - **Tarefas:** Controle de atividades, prazos e status.
 - **Indicadores Dinâmicos:** Atualização das informações realizadas no sistema.
 
