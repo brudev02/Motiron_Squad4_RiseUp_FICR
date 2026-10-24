@@ -50,15 +50,31 @@ export default function FormCadastro() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <InputTexto label="Nome completo" nome="nome" placeholder="Digite seu nome" />
-      <InputTexto label="E-mail" nome="email" tipo="email" placeholder="Digite seu e-mail" />
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3">
+      <InputTexto
+        label="Nome completo"
+        nome="nome"
+        placeholder="Digite seu nome"
+      />
+      <InputTexto
+        label="E-mail"
+        nome="email"
+        tipo="email"
+        placeholder="Digite seu e-mail"
+      />
       <InputSenha label="Senha" nome="senha" placeholder="Crie uma senha" />
-      <InputSenha label="Confirmar senha" nome="confirmarSenha" placeholder="Digite a senha novamente" />
+      <InputSenha
+        label="Confirmar senha"
+        nome="confirmarSenha"
+        placeholder="Digite a senha novamente"
+      />
 
       {erro && <p className="text-sm text-red-300">{erro}</p>}
 
-      <BotaoExtendido texto={carregando ? "Criando..." : "Criar conta"} tipo="submit" />
+      <BotaoExtendido
+        texto={carregando ? "Criando..." : "Criar conta"}
+        tipo="submit"
+      />
     </form>
   );
 }

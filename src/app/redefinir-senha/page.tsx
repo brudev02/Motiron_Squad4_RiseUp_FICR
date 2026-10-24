@@ -5,6 +5,7 @@ import Link from "next/link";
 import InputTexto from "@/app/components/InputTexto";
 import InputSenha from "@/app/components/InputSenha";
 import BotaoExtendido from "@/app/components/BotaoExtendido";
+import { PainelIlustracao } from "@/components/PainelIlustracao";
 
 export default function RedefinirSenhaPage() {
   const [erro, setErro] = useState("");
@@ -26,6 +27,7 @@ export default function RedefinirSenhaPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),
       });
+
       const resultado: unknown = await resposta.json();
 
       if (!resposta.ok) {
@@ -51,63 +53,72 @@ export default function RedefinirSenhaPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#1D2029] px-5 py-10">
-      <section className="w-full max-w-lg rounded-2xl bg-[#344D6B] p-8 shadow-xl sm:p-10">
-        <h1 className="text-3xl font-bold text-white">
-          Redefinição de senha
-        </h1>
+    <main className="flex min-h-screen flex-col md:flex-row">
+      <section className="flex flex-1 items-center justify-center bg-painel px-6 py-10">
+        <div className="flex w-full max-w-md flex-col items-center gap-3">
+          <h1 className="text-center text-3xl font-bold">
+            Redefinição de senha
+          </h1>
 
-        <p className="mb-8 mt-2 text-sm text-slate-300">
-          Crie uma nova senha para sua conta.
-        </p>
+          <p className="mb-3 text-center text-[11px]">
+            Crie uma nova senha para sua conta.
+          </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <InputTexto
-            label="E-mail cadastrado"
-            nome="email"
-            tipo="email"
-            placeholder="Digite o e-mail da sua conta"
-          />
+          <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3">
+            <InputTexto
+              label="E-mail cadastrado"
+              nome="email"
+              tipo="email"
+              placeholder="Digite o e-mail da sua conta"
+            />
 
-          <InputSenha
-            label="Nova senha"
-            nome="novaSenha"
-            placeholder="Digite a nova senha"
-          />
+            <InputSenha
+              label="Nova senha"
+              nome="novaSenha"
+              placeholder="Digite a nova senha"
+            />
 
-          <InputSenha
-            label="Confirmar nova senha"
-            nome="confirmarNovaSenha"
-            placeholder="Repita a nova senha"
-          />
+            <InputSenha
+              label="Confirmar nova senha"
+              nome="confirmarNovaSenha"
+              placeholder="Repita a nova senha"
+            />
 
-          {erro && (
-            <p role="alert" className="text-sm text-red-300">
-              {erro}
-            </p>
-          )}
+            {erro && (
+              <p role="alert" className="text-sm text-red-300">
+                {erro}
+              </p>
+            )}
 
-          {sucesso && (
-            <p role="status" className="text-sm text-green-300">
-              Senha redefinida com sucesso. Você já pode entrar com a nova senha.
-            </p>
-          )}
+            {sucesso && (
+              <p role="status" className="text-sm text-green-300">
+                Senha redefinida com sucesso. Você já pode entrar com a
+                nova senha.
+              </p>
+            )}
 
-          <BotaoExtendido
-            texto={carregando ? "Salvando..." : "Salvar"}
-            tipo="submit"
-          />
-        </form>
+            <BotaoExtendido
+              texto={carregando ? "Salvando..." : "Salvar"}
+              tipo="submit"
+            />
+          </form>
 
-        <div className="mt-6 text-center">
-          <Link
-            href="/login"
-            className="text-sm text-violet-300 hover:text-white"
-          >
-            Voltar para o login
-          </Link>
+          <div className="mt-3 text-center">
+            <Link
+              href="/login"
+              className="text-xs text-white/60 hover:text-white"
+            >
+              Voltar para o login
+            </Link>
+          </div>
         </div>
       </section>
+
+      <PainelIlustracao
+        imagem="/ilustracoes/RecuperaçãoSenha.svg"
+        alt="Ilustração de recuperação de senha"
+        className="md:w-[45%]"
+      />
     </main>
   );
 }

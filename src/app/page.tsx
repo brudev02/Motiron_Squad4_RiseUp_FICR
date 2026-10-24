@@ -7,15 +7,11 @@ export default function Home() {
 
       <p>Sistema de gerenciamento de licenças</p>
 
-      <Link href="/login">
-        Entrar
-      </Link>
+      <Link href="/login">Entrar</Link>
 
       <br />
 
-      <Link href="/cadastro">
-        Criar conta
-      </Link>
+      <Link href="/cadastro">Criar conta</Link>
     </main>
   );
 }

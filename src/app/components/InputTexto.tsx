@@ -1,8 +1,8 @@
 interface InputTextoProps {
-    label: string;
-    nome: string;
-    placeholder: string;
-    tipo?: "text" | "email";
+  label: string;
+  nome: string;
+  placeholder: string;
+  tipo?: "text" | "email";
 }
 
 export default function InputTexto({
@@ -10,21 +10,21 @@ export default function InputTexto({
     nome,
     placeholder,
     tipo = "text",
-}: InputTextoProps){
+}: InputTextoProps) {
     return (
-        <div className="flex flex-col gap-2">
-            <label htmlFor={nome} className="text-sm text-white">
-                {label}
-            </label>
+      <div className="flex flex-col gap-2">
+        <label htmlFor={nome} className="text-xs text-white">
+          {label}
+        </label>
 
-            <input
-            id={nome}
-            name={nome}
-            type={tipo}
-            placeholder={placeholder}
-            required
-            className="w-full rounded-xl border border-indigo-300/20 bg-indigo-950/30 px-4 py-3 text-white placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-indigo-400"/>
-            
-        </div>
+        <input
+          id={nome}
+          name={nome}
+          type={tipo}
+          placeholder={placeholder}
+          required
+          className="h-10 w-full rounded-xl bg-campo px-3 text-xs text-escuro shadow-[0_4px_6px_rgba(0,0,0,0.35)] placeholder:text-escuro/60 outline-none focus-visible:ring-2 focus-visible:ring-destaque"
+        />
+      </div>
     );
 }
