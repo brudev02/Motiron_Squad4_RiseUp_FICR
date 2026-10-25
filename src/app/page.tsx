@@ -1,17 +1,19 @@
-import Link from "next/link";
+import { Cabecalho } from "@/components/landing/Cabecalho";
+import { Hero } from "@/components/landing/Hero";
+import { Recursos } from "@/components/landing/Recursos";
+import { Rodape } from "@/components/landing/Rodape";
 
+// Landing page da Adgestion. Os botões "Entrar" e "Começar agora"
+// levam para /login e /cadastro (ver Cabecalho.tsx e Hero.tsx).
 export default function Home() {
   return (
-    <main>
-      <h1>Adgestion</h1>
-
-      <p>Sistema de gerenciamento de licenças</p>
-
-      <Link href="/login">Entrar</Link>
-
-      <br />
-
-      <Link href="/cadastro">Criar conta</Link>
-    </main>
+    <>
+      <Cabecalho />
+      <main>
+        <Hero />
+        <Recursos />
+      </main>
+      <Rodape />
+    </>
   );
 }

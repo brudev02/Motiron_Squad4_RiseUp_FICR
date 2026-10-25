@@ -6,8 +6,13 @@
   --color-campo: #a8d5c8;
   --color-destaque: #4aa396;
   --color-marca: #9d8fd0;
+  --color-fundo-claro: #eef6f3;
 
   --font-sans: var(--font-poppins);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
