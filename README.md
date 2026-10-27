@@ -50,11 +50,11 @@ A plataforma foi concebida para atender diferentes empresas, independentemente d
 
 ### Usadas na Aplicação:
 
-- Next.js, React e React DOM **Framework e Interface.**
-- Prisma, Prisma Client e @prisma/adapter-better-sqlite3 **Banco de dados SQLite.**
-- bcrypts **Processamento seguro de senhas.**
-- Jose **Operadores de tokens.**
-- Zod **Validação de dados.**
+- Next.js, React e React DOM - **Framework e Interface.**
+- Prisma, Prisma Client e @prisma/adapter-better-sqlite3 - **Banco de dados SQLite.**
+- bcrypts - **Processamento seguro de senhas.**
+- Jose - **Operadores de tokens.**
+- Zod - **Validação de dados.**
 
 ### Desenvolvimento e estilos:
 
