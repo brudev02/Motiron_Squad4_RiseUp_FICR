@@ -19,7 +19,7 @@ O projeto busca simular uma aplicação SaaS voltada para diferentes empresas, a
 
 # Público-Alvo
 
-A plataforma foi concebida para atender diferentes empresas, independentemente de um segmento empresarial específico, que necessitam centralizar informações e acompanhar suas unidades, documentos e tarefas.
+A plataforma foi concebida para atender **diferentes empresas**, independentemente de um segmento empresarial específico, que necessitam centralizar informações e acompanhar suas unidades, documentos e tarefas.
 
 ---
 
