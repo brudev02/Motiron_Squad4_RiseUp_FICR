@@ -114,4 +114,4 @@ As etapas abaixo representam o planejamento de evolução do projeto. O status d
 
 Projeto desenvolvido com parceria da Motiron e a FICR, com foco em Arquitetura Front-End, organização de códigos, regras de negócio e boas práticas de engenharia de software.
 
-Projeto
+---
