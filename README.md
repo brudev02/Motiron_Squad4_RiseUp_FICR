@@ -69,16 +69,16 @@ A plataforma foi concebida para atender **diferentes empresas**, independentemen
 **Pré-requisitos:** Node.js, npm e Git.
 
 #### Clonar o repositório
-git clone https://github.com/brudev02/Motiron_Squad4_RiseUp_FICR.git
+> git clone https://github.com/brudev02/Motiron_Squad4_RiseUp_FICR.git
 
 #### Acessar a pasta do projeto
-cd Motiron_Squard4_RiseUp_FICR
+> cd Motiron_Squard4_RiseUp_FICR
 
 #### Instalar as dependências
-npm install
+> npm install
 
 #### Iniciar o ambiente de desenvolvimento
-npm run dev
+> npm run dev
 
 ---
 
