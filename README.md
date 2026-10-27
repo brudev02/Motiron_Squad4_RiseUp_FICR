@@ -36,17 +36,49 @@ A plataforma foi concebida para atender diferentes empresas, independentemente d
 
 # Tecnologias
 
-| Tecnologia |  Finalidade        |
+| Tecnologia |  Utilização        |
 |------------|--------------------|
-| Next.js  |  Framework principal  |
-| TypeScript  |  Tipagem Estática  |
+| Next.js  |  Desenvolvimento de aplicação web  |
+| TypeScript  |  Tipagem e organização do código  |
 | HTML5  |  Estrutura das páginas  |
 | CSS3  |  Estelização e responsividade  |
-| JavaScript | Recursos das linguagem  |
+| JavaScript | Recursos moderdos da linguagem  |
 
 ---
 
-# Bibliotecas Previstas
+# Bibliotecas Utilizadas
+
+### Usadas na Aplicação:
+
+- Next.js, React e React DOM **Framework e Interface.**
+- Prisma, Prisma Client e @prisma/adapter-better-sqlite3 **Banco de dados SQLite.**
+- bcrypts **Processamento seguro de senhas.**
+- Jose **Operadores de tokens.**
+- Zod **Validação de dados.**
+
+### Desenvolvimento e estilos:
+
+- Tailwind CSS e @tailwindcss/postcss.
+- TypeScript
+- ESLint e eslint-config-next
+
+---
+
+# Como Executar
+
+**Pré-requisitos:** Node.js, npm e Git.
+
+#### Clonar o repositório
+git clone https://github.com/brudev02/Motiron_Squad4_RiseUp_FICR.git
+
+#### Acessar a pasta do projeto
+cd Motiron_Squard4_RiseUp_FICR
+
+#### Instalar as dependências
+npm install
+
+#### Iniciar o ambiente de desenvolvimento
+npm run dev
 
 ---
 
@@ -54,22 +86,32 @@ A plataforma foi concebida para atender diferentes empresas, independentemente d
 
 As etapas abaixo representam o planejamento de evolução do projeto. O status de cada item deverá ser atualizado conforme a implementação real da equipe.
 
-- [x] Configuração do Next.js com TypeScript
-- [x] Definição do design system.
-- [x] Desenvolvimento da tela de login.
-- [ ] Implementação do dashboard.
-- [ ] Desenvolvimento das listagens e dos detalhes.
-- [ ] Implementação das avaliações de formulários
-- [ ] Controle de Status das unidades.
-- [ ] Confirmação de conclusão de tarefas.
-- [ ] Tratamento dos estados de carregamento, erro e ausência de dados.
-- [ ] Garantir responsividade e acessibilidade.
-- [ ] Persistência dos dados em banco de dados.
+## Etapas Concluidas:
 
+- [x] Configuração do Next.js com TypeScript
+- [x] Definição do Design System
+- [x] Implementação de tela de login
+- [x] Implementação do Dashboard
+- [x] Desenvolvimento das listagens e dos detalhes
+- [x] Implementação de recursos de acessibilidade
+
+## Melhorias planejadas
+
+- [ ] Implementação das avaliações de formulários
+- [ ] Controle de Status das unidades
+- [ ] Confirmação de conclusão de tarefas
+- [ ]  Criar uma camada de API ou servidor de dados simulados
+- [ ] Implementar cache e atualização dos dados entre telas
+- [ ] Bloquear a exclusão de unidades com ducumentos pendentes ou tarefas em andamento
+- [ ] Registrar um histórico de alterações
+- [ ] Implementar modo escuro
+      
 ---
 
 # Status
 
 ## Em desenvolvimento
+
+Projeto desenvolvido com parceria da Motiron e a FICR, com foco em Arquitetura Front-End, organização de códigos, regras de negócio e boas práticas de engenharia de software.
 
 Projeto
