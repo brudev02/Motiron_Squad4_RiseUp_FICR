@@ -8,7 +8,7 @@ O projeto busca simular uma aplicação SaaS voltada para diferentes empresas, a
 
 ---
 
-# Objetivos
+# 🎯 Objetivos
 
 - Centralizar informações de diferentes unidades empresarias.
 - Facilitar o acompanhamento de documentos e suas respectivas validades.
@@ -17,24 +17,24 @@ O projeto busca simular uma aplicação SaaS voltada para diferentes empresas, a
 - Garantir uma interface intuitiva, responsiva e consistente.
 - Aplicar boas práticas de desenvolvimento Front-End e Arquitetura de Software.
 
-# Público-Alvo
+# 👥 Público-Alvo
 
 A plataforma foi concebida para atender **diferentes empresas**, independentemente de um segmento empresarial específico, que necessitam centralizar informações e acompanhar suas unidades, documentos e tarefas.
 
 ---
 
-# Funcionalidades
+# 🧩 Funcionalidades
 
 - **Login:** Autenticação e validação de formularios.
-- **📊 Dashboard:** Visão geral de unidades, documentos e tarefas pendentes.
+- **Dashboard:** Visão geral de unidades, documentos e tarefas pendentes.
 - **Gestão de Unidades:** Listagem, pesquisa, filtros e detalhamento de uniades.
-- **📑 Documentos:** Acompanhamento de validade e identificação de vencimentos.
+- **Documentos:** Acompanhamento de validade e identificação de vencimentos.
 - **Tarefas:** Controle de atividades, prazos e status.
 - **Indicadores Dinâmicos:** Atualização das informações realizadas no sistema.
 
 ---
 
-# Tecnologias
+# ⌨⚙️ Tecnologias
 
 | Tecnologia |  Utilização        |
 |------------|--------------------|
@@ -46,7 +46,7 @@ A plataforma foi concebida para atender **diferentes empresas**, independentemen
 
 ---
 
-# Bibliotecas Utilizadas
+# 📜 Bibliotecas Utilizadas
 
 ### Usadas na Aplicação:
 
@@ -64,7 +64,7 @@ A plataforma foi concebida para atender **diferentes empresas**, independentemen
 
 ---
 
-# Como Executar
+# 💻 Como Executar
 
 **Pré-requisitos:** Node.js, npm e Git.
 
@@ -110,7 +110,7 @@ As etapas abaixo representam o planejamento de evolução do projeto. O status d
 
 # Status
 
-## Em desenvolvimento
+## 🚧 Em desenvolvimento
 
 Projeto desenvolvido com parceria da Motiron e a FICR, com foco em Arquitetura Front-End, organização de códigos, regras de negócio e boas práticas de engenharia de software.
 
