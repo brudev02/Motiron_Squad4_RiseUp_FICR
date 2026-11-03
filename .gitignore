@@ -32,10 +32,6 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-# Alterar o Secret posteriormente
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="troque-por-uma-string-longa-e-aleatoria"
-
 # vercel
 .vercel
 
@@ -46,3 +42,7 @@ next-env.d.ts
 # Arquivos auxiliares de agentes de IA
 AGENTS.md
 CLAUDE.md
+# banco SQLite local
+*.db
+*.db-journal
+!.env.example

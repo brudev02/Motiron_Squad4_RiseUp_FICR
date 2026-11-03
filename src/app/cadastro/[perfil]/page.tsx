@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import FormCadastro from "../app/cadastro/FormCadastro";
-import { PainelIlustracao } from "@/components/PainelIlustracao";
-
-type Perfil = "empresa" | "funcionario";
+import type { Perfil } from "@/lib/dashboard/tipos";
+import { FormCadastro } from "@/components/auth/FormCadastro";
+import { PainelIlustracao } from "@/components/auth/PainelIlustracao";
 
 const perfis: Record<Perfil, { nome: string; imagem: string }> = {
   empresa: {
@@ -41,7 +40,7 @@ export default async function CadastroPerfilPage({
             Preencha os campos para criar sua conta.
           </p>
 
-          <FormCadastro />
+          <FormCadastro perfil={perfil} />
 
           <p className="mt-3 text-center text-xs text-white/70">
             Já tem uma conta?{" "}

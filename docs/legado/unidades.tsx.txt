@@ -1,0 +1,554 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import "./unidades.css";
+
+// ==========================================
+// 1. TIPOS E INTERFACES
+// ==========================================
+
+type SituacaoUnidade = "Ativa" | "Inativa";
+
+type Unidade = {
+  id: number;
+  nome: string;
+  responsavel: string;
+  cidade: string;
+  situacao: SituacaoUnidade;
+};
+
+// ==========================================
+// 2. DADOS INICIAIS
+// ==========================================
+
+const unidadesIniciais: Unidade[] = [
+  {
+    id: 1,
+    nome: "Unidade Recife",
+    responsavel: "Ana Silva",
+    cidade: "Recife - PE",
+    situacao: "Ativa",
+  },
+  {
+    id: 2,
+    nome: "Unidade Olinda",
+    responsavel: "Carlos Souza",
+    cidade: "Olinda - PE",
+    situacao: "Ativa",
+  },
+  {
+    id: 3,
+    nome: "Unidade Paulista",
+    responsavel: "Maria Santos",
+    cidade: "Paulista - PE",
+    situacao: "Inativa",
+  },
+  {
+    id: 4,
+    nome: "Unidade Jaboatão",
+    responsavel: "Pedro Lima",
+    cidade: "Jaboatão - PE",
+    situacao: "Ativa",
+  },
+];
+
+const CHAVE_LOCAL_STORAGE = "licencia-unidades";
+
+// ==========================================
+// 3. COMPONENTE PRINCIPAL
+// ==========================================
+
+export default function Home() {
+  // ----------------------------------------
+  // Estados das unidades e da persistência
+  // ----------------------------------------
+
+  const [unidades, setUnidades] =
+    useState<Unidade[]>(unidadesIniciais);
+
+  const [carregado, setCarregado] = useState(false);
+
+  // ----------------------------------------
+  // Estados da pesquisa e dos filtros
+  // ----------------------------------------
+
+  const [pesquisa, setPesquisa] = useState("");
+  const [filtro, setFiltro] = useState("Todas");
+
+  // ----------------------------------------
+  // Estados do formulário
+  // ----------------------------------------
+
+  const [formAberto, setFormAberto] = useState(false);
+  const [nome, setNome] = useState("");
+  const [responsavel, setResponsavel] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [situacao, setSituacao] =
+    useState<SituacaoUnidade>("Ativa");
+
+  const [mensagem, setMensagem] = useState("");
+  const [editandoId, setEditandoId] = useState<number | null>(
+    null
+  );
+
+  // ==========================================
+  // 4. CARREGAR DADOS DO NAVEGADOR
+  // ==========================================
+
+  useEffect(() => {
+    try {
+      const dadosSalvos = localStorage.getItem(
+        CHAVE_LOCAL_STORAGE
+      );
+
+      if (dadosSalvos) {
+        const dados = JSON.parse(dadosSalvos);
+
+        if (Array.isArray(dados)) {
+          setUnidades(dados as Unidade[]);
+        }
+      }
+    } catch {
+      console.error(
+        "Não foi possível carregar as unidades salvas."
+      );
+    } finally {
+      setCarregado(true);
+    }
+  }, []);
+
+  // ==========================================
+  // 5. SALVAR ALTERAÇÕES NO NAVEGADOR
+  // ==========================================
+
+  useEffect(() => {
+    if (!carregado) return;
+
+    try {
+      localStorage.setItem(
+        CHAVE_LOCAL_STORAGE,
+        JSON.stringify(unidades)
+      );
+    } catch {
+      console.error(
+        "Não foi possível salvar as unidades no navegador."
+      );
+    }
+  }, [unidades, carregado]);
+
+  // ==========================================
+  // 6. PESQUISA E FILTROS
+  // ==========================================
+
+  const unidadesFiltradas = unidades.filter((unidade) => {
+    const termoPesquisa = pesquisa.toLowerCase().trim();
+
+    const correspondePesquisa =
+      unidade.nome.toLowerCase().includes(termoPesquisa) ||
+      unidade.responsavel
+        .toLowerCase()
+        .includes(termoPesquisa) ||
+      unidade.cidade.toLowerCase().includes(termoPesquisa);
+
+    const correspondeSituacao =
+      filtro === "Todas" || unidade.situacao === filtro;
+
+    return correspondePesquisa && correspondeSituacao;
+  });
+
+  // ==========================================
+  // 7. INDICADORES
+  // ==========================================
+
+  const totalAtivas = unidades.filter(
+    (unidade) => unidade.situacao === "Ativa"
+  ).length;
+
+  const totalInativas = unidades.filter(
+    (unidade) => unidade.situacao === "Inativa"
+  ).length;
+
+  // ==========================================
+  // 8. FUNÇÕES DO FORMULÁRIO
+  // ==========================================
+
+  function limparFormulario() {
+    setNome("");
+    setResponsavel("");
+    setCidade("");
+    setSituacao("Ativa");
+    setMensagem("");
+    setEditandoId(null);
+    setFormAberto(false);
+  }
+
+  function abrirNovoCadastro() {
+    setNome("");
+    setResponsavel("");
+    setCidade("");
+    setSituacao("Ativa");
+    setMensagem("");
+    setEditandoId(null);
+    setFormAberto(true);
+  }
+
+  function cadastrarUnidade() {
+    if (
+      !nome.trim() ||
+      !responsavel.trim() ||
+      !cidade.trim()
+    ) {
+      setMensagem("Preencha todos os campos.");
+      return;
+    }
+
+    if (editandoId !== null) {
+      // Atualiza uma unidade existente.
+      setUnidades((listaAtual) =>
+        listaAtual.map((unidade) =>
+          unidade.id === editandoId
+            ? {
+                ...unidade,
+                nome: nome.trim(),
+                responsavel: responsavel.trim(),
+                cidade: cidade.trim(),
+                situacao,
+              }
+            : unidade
+        )
+      );
+    } else {
+      // Cadastra uma nova unidade.
+      const novaUnidade: Unidade = {
+        id: Date.now(),
+        nome: nome.trim(),
+        responsavel: responsavel.trim(),
+        cidade: cidade.trim(),
+        situacao,
+      };
+
+      setUnidades((listaAtual) => [
+        ...listaAtual,
+        novaUnidade,
+      ]);
+    }
+
+    limparFormulario();
+  }
+
+  function iniciarEdicao(unidade: Unidade) {
+    setEditandoId(unidade.id);
+    setNome(unidade.nome);
+    setResponsavel(unidade.responsavel);
+    setCidade(unidade.cidade);
+    setSituacao(unidade.situacao);
+    setMensagem("");
+    setFormAberto(true);
+  }
+
+  function excluirUnidade(id: number) {
+    const confirmar = window.confirm(
+      "Tem certeza que deseja excluir esta unidade?"
+    );
+
+    if (!confirmar) return;
+
+    setUnidades((listaAtual) =>
+      listaAtual.filter((unidade) => unidade.id !== id)
+    );
+
+    if (editandoId === id) {
+      limparFormulario();
+    }
+  }
+
+  // ==========================================
+  // 9. INTERFACE DO SISTEMA
+  // ==========================================
+
+  return (
+    <div className="layout">
+      {/* Menu lateral */}
+      <aside className="sidebar">
+        <h2 className="logo">
+          Licencia<span>+</span>
+        </h2>
+
+        <p className="menu-titulo">MENU PRINCIPAL</p>
+
+        <nav>
+          <a href="#">Visão Geral</a>
+          <a href="#" className="ativo">
+            Unidades
+          </a>
+          <a href="#">Documentos</a>
+          <a href="#">Tarefas</a>
+          <a href="#">Configurações</a>
+        </nav>
+
+        <div className="usuario">
+          <strong>Administrador</strong>
+          <p>Gestão de Licenciaturas</p>
+        </div>
+      </aside>
+
+      {/* Conteúdo principal */}
+      <main className="conteudo">
+        {/* Cabeçalho */}
+        <header className="cabecalho">
+          <div>
+            <h1>Unidades</h1>
+            <p>Gerencie as unidades do sistema.</p>
+          </div>
+
+          <button
+            className="botao"
+            onClick={abrirNovoCadastro}
+          >
+            + Nova unidade
+          </button>
+        </header>
+
+        {/* Indicadores */}
+        <section className="indicadores">
+          <article className="cartao">
+            <div className="cartao-topo">
+              <p>Total de unidades</p>
+              <span className="icone-cartao icone-roxo">
+                ▦
+              </span>
+            </div>
+
+            <h2>{unidades.length}</h2>
+            <span className="descricao-cartao">
+              Unidades cadastradas
+            </span>
+          </article>
+
+          <article className="cartao">
+            <div className="cartao-topo">
+              <p>Unidades ativas</p>
+              <span className="icone-cartao icone-verde">
+                ✓
+              </span>
+            </div>
+
+            <h2>{totalAtivas}</h2>
+            <span className="descricao-cartao">
+              Em funcionamento
+            </span>
+          </article>
+
+          <article className="cartao">
+            <div className="cartao-topo">
+              <p>Unidades inativas</p>
+              <span className="icone-cartao icone-vermelho">
+                !
+              </span>
+            </div>
+
+            <h2>{totalInativas}</h2>
+            <span className="descricao-cartao">
+              Fora de funcionamento
+            </span>
+          </article>
+        </section>
+
+        {/* Formulário de cadastro e edição */}
+        {formAberto && (
+          <section className="lista-unidades formulario">
+            <h2>
+              {editandoId !== null
+                ? "Editar unidade"
+                : "Nova unidade"}
+            </h2>
+
+            <form
+              onSubmit={(evento) => {
+                evento.preventDefault();
+                cadastrarUnidade();
+              }}
+            >
+              <label>
+                Nome da unidade
+                <input
+                  value={nome}
+                  onChange={(evento) =>
+                    setNome(evento.target.value)
+                  }
+                  placeholder="Ex.: Unidade Caruaru"
+                  required
+                />
+              </label>
+
+              <label>
+                Responsável
+                <input
+                  value={responsavel}
+                  onChange={(evento) =>
+                    setResponsavel(evento.target.value)
+                  }
+                  placeholder="Nome do responsável"
+                  required
+                />
+              </label>
+
+              <label>
+                Cidade
+                <input
+                  value={cidade}
+                  onChange={(evento) =>
+                    setCidade(evento.target.value)
+                  }
+                  placeholder="Ex.: Caruaru - PE"
+                  required
+                />
+              </label>
+
+              <label>
+                Situação
+                <select
+                  value={situacao}
+                  onChange={(evento) =>
+                    setSituacao(
+                      evento.target.value as SituacaoUnidade
+                    )
+                  }
+                >
+                  <option value="Ativa">Ativa</option>
+                  <option value="Inativa">Inativa</option>
+                </select>
+              </label>
+
+              {mensagem && (
+                <p className="erro-formulario">{mensagem}</p>
+              )}
+
+              <div className="acoes-formulario">
+                <button type="submit" className="botao">
+                  {editandoId !== null
+                    ? "Salvar alterações"
+                    : "Salvar unidade"}
+                </button>
+
+                <button
+                  type="button"
+                  className="botao botao-secundario"
+                  onClick={limparFormulario}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </section>
+        )}
+
+        {/* Lista de unidades */}
+        <section className="lista-unidades">
+          <h2>Lista de unidades</h2>
+
+          {/* Pesquisa e filtro */}
+          <div className="filtros">
+            <input
+              type="text"
+              placeholder="Pesquisar unidade..."
+              value={pesquisa}
+              onChange={(evento) =>
+                setPesquisa(evento.target.value)
+              }
+            />
+
+            <select
+              value={filtro}
+              onChange={(evento) =>
+                setFiltro(evento.target.value)
+              }
+            >
+              <option value="Todas">
+                Todas as situações
+              </option>
+              <option value="Ativa">Ativas</option>
+              <option value="Inativa">Inativas</option>
+            </select>
+          </div>
+
+          {/* Tabela */}
+          <div className="tabela-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Unidade</th>
+                  <th>Responsável</th>
+                  <th>Cidade</th>
+                  <th>Situação</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {unidadesFiltradas.map((unidade) => (
+                  <tr key={unidade.id}>
+                    <td>{unidade.nome}</td>
+                    <td>{unidade.responsavel}</td>
+                    <td>{unidade.cidade}</td>
+
+                    <td>
+                      <span
+                        className={
+                          unidade.situacao === "Ativa"
+                            ? "status status-ativa"
+                            : "status status-inativa"
+                        }
+                      >
+                        {unidade.situacao}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div className="acoes-tabela">
+                        <button
+                          className="botao-excluir"
+                          onClick={() =>
+                            excluirUnidade(unidade.id)
+                          }
+                        >
+                          Excluir
+                        </button>
+
+                        <button
+                          className="botao"
+                          onClick={() =>
+                            iniciarEdicao(unidade)
+                          }
+                        >
+                          Editar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+
+                {unidadesFiltradas.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="sem-resultados"
+                    >
+                      Nenhuma unidade encontrada.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Resumo dos resultados */}
+          <p className="total-resultados">
+            Exibindo {unidadesFiltradas.length} de{" "}
+            {unidades.length} unidades
+          </p>
+        </section>
+      </main>
+    </div>
+  );
+}

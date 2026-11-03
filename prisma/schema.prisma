@@ -6,10 +6,88 @@ datasource db {
   provider = "sqlite"
 }
 
+// Conta de acesso. Todos os registros do dashboard pertencem a um usuário
+// (usuarioId): cada conta só enxerga e altera os próprios dados.
 model Usuario {
   id        String   @id @default(cuid())
   nome      String
   email     String   @unique
   senhaHash String
+  // "empresa" | "funcionario" (escolhido na etapa 1 do cadastro)
+  perfil    String   @default("empresa")
   criadoEm  DateTime @default(now())
+
+  unidades   Unidade[]
+  documentos Documento[]
+  tarefas    Tarefa[]
+  atividades Atividade[]
+}
+
+model Unidade {
+  id          String   @id @default(cuid())
+  nome        String
+  responsavel String
+  cidade      String
+  // "Ativa" | "Inativa"
+  situacao    String   @default("Ativa")
+  // true = criado pelo botão "Carregar dados de exemplo"
+  demo        Boolean  @default(false)
+  criadoEm    DateTime @default(now())
+
+  usuarioId  String
+  usuario    Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  documentos Documento[]
+
+  @@index([usuarioId])
+}
+
+model Documento {
+  id          String    @id @default(cuid())
+  nome        String
+  responsavel String
+  vencimento  DateTime?
+  emAnalise   Boolean   @default(false)
+  demo        Boolean   @default(false)
+  criadoEm    DateTime  @default(now())
+
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  // Ao excluir a unidade, o documento continua existindo, sem unidade.
+  unidadeId String?
+  unidade   Unidade? @relation(fields: [unidadeId], references: [id], onDelete: SetNull)
+
+  @@index([usuarioId])
+  @@index([unidadeId])
+}
+
+model Tarefa {
+  id          String    @id @default(cuid())
+  titulo      String
+  responsavel String
+  prazo       DateTime?
+  // "Baixa" | "Média" | "Alta"
+  prioridade  String    @default("Média")
+  // "Pendente" | "Em andamento" | "Concluída"
+  status      String    @default("Pendente")
+  demo        Boolean   @default(false)
+  criadoEm    DateTime  @default(now())
+
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+}
+
+// Histórico exibido em "Atividade recente".
+model Atividade {
+  id        String   @id @default(cuid())
+  // "unidade" | "documento" | "tarefa" | "sistema"
+  tipo      String
+  descricao String
+  criadoEm  DateTime @default(now())
+
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, criadoEm])
 }

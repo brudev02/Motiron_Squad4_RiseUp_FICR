@@ -1,4 +1,4 @@
-# Adgestio - Plataforma de Gestão Corporativa
+# Adgestion - Plataforma de Gestão Corporativa
 
 > **Gestão centralize. Informações organizadas. Decisões mais eficientes.**
 
@@ -77,8 +77,18 @@ A plataforma foi concebida para atender **diferentes empresas**, independentemen
 #### Instalar as dependências
 > npm install
 
+#### Configurar o ambiente
+> copie `.env.example` para `.env` e defina `JWT_SECRET` (string aleatória com no mínimo 32 caracteres)
+
+#### Criar o banco de dados local (SQLite)
+> npm run db:push
+
 #### Iniciar o ambiente de desenvolvimento
 > npm run dev
+
+Acesse `http://localhost:3000`, crie uma conta em **Começar agora** e entre pelo **Entrar**. O dashboard fica em `/dashboard` e só abre com sessão válida. Em **Configurações** é possível carregar (e remover) dados de exemplo.
+
+Verificações: `npm run lint` e `npm run build`.
 
 ---
 

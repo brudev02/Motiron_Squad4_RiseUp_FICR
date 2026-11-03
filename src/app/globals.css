@@ -1,12 +1,23 @@
 @import "tailwindcss";
 
+/* Design system da Adgestion: única fonte das cores usadas em toda a
+   aplicação (landing, acesso e dashboard). */
 @theme inline {
+  /* identidade */
   --color-escuro: #03303a;
   --color-painel: #1f5d60;
   --color-campo: #a8d5c8;
   --color-destaque: #4aa396;
-  --color-marca: #9d8fd0;
   --color-fundo-claro: #eef6f3;
+
+  /* estados (selos, avisos, gráficos) */
+  --color-ok: #17784f;
+  --color-ok-fundo: #dff3e8;
+  --color-aviso: #8a5a00;
+  --color-aviso-fundo: #fdf0d2;
+  --color-ambar: #e2a93b;
+  --color-perigo: #b42318;
+  --color-perigo-fundo: #fde7e4;
 
   --font-sans: var(--font-poppins);
 }

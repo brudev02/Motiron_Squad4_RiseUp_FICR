@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IconeLanding } from "./IconesLanding";
+import { Icone } from "@/components/ui/Icones";
 import { MockupDashboard } from "./MockupDashboard";
 
 const garantias = ["Tudo centralizado", "Sua equipe conectada", "Mais controle sobre o fluxo"];
@@ -30,7 +30,7 @@ export function Hero() {
             className="inline-flex h-10 items-center gap-2 rounded-md bg-destaque px-6 text-sm font-medium text-white transition hover:brightness-110"
           >
             Começar agora
-            <IconeLanding nome="seta" />
+            <Icone nome="seta" />
           </Link>
           <a
             href="#funcionalidades"
@@ -43,7 +43,7 @@ export function Hero() {
         <ul className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/60">
           {garantias.map((g) => (
             <li key={g} className="flex items-center gap-1.5">
-              <IconeLanding nome="check" className="h-3.5 w-3.5 text-destaque" />
+              <Icone nome="check" className="h-3.5 w-3.5 text-destaque" />
               {g}
             </li>
           ))}
@@ -53,7 +53,7 @@ export function Hero() {
       <div className="mx-auto mt-14 max-w-5xl">
         <MockupDashboard />
         <p className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/50">
-          <IconeLanding nome="escudo" className="h-3.5 w-3.5" />
+          <Icone nome="escudo" className="h-3.5 w-3.5" />
           Uma visão integrada. Todas as frentes da operação.
         </p>
       </div>

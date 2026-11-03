@@ -1,9 +1,9 @@
-import { IconeLanding, type NomeIconeLanding } from "./IconesLanding";
+import { Icone, type NomeIcone } from "@/components/ui/Icones";
 
 const recursos: {
   titulo: string;
   texto: string;
-  icone: NomeIconeLanding;
+  icone: NomeIcone;
   itens: string[];
 }[] = [
   {
@@ -54,14 +54,14 @@ export function Recursos() {
               className="rounded-xl border border-escuro/10 bg-white p-6 shadow-sm"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-campo/40 text-painel">
-                <IconeLanding nome={r.icone} className="h-5 w-5" />
+                <Icone nome={r.icone} className="h-5 w-5" />
               </span>
               <h3 className="mt-5 text-base font-semibold">{r.titulo}</h3>
               <p className="mt-2 text-xs leading-relaxed text-escuro/60">{r.texto}</p>
               <ul className="mt-5 space-y-2 border-t border-escuro/10 pt-4 text-xs text-escuro/80">
                 {r.itens.map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <IconeLanding nome="check" className="h-3.5 w-3.5 text-destaque" />
+                    <Icone nome="check" className="h-3.5 w-3.5 text-destaque" />
                     {item}
                   </li>
                 ))}
