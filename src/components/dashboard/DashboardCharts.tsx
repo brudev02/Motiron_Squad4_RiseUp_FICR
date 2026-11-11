@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -71,7 +72,7 @@ export function DashboardCharts({ atividade6m, atividadeAno, distribuicao }: Pro
             <p className="mt-1 text-[11px] text-escuro/50">Distribuição por situação</p>
           </div>
           <Link
-            href="/dashboard/documentos"
+            href="/dashboard/documentos-nova"
             className="text-[11px] font-semibold text-painel hover:underline"
           >
             Ver documentos

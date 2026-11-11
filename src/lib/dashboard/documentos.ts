@@ -6,6 +6,7 @@ import { registrarAtividade } from "./atividades";
 import { deDataUTC, hojeISO, paraDataUTC } from "./datas";
 import { situacaoDocumento } from "./situacao";
 import type { DocumentoDTO } from "./tipos";
+import { excluirArquivoDocumento } from "@/lib/arquivos-documentos";
 
 type LinhaDocumento = {
   id: string;
@@ -16,6 +17,11 @@ type LinhaDocumento = {
   demo: boolean;
   unidadeId: string | null;
   unidade: { nome: string } | null;
+
+  // Informações do PDF anexado.
+  arquivoNome: string | null;
+  arquivoChave: string | null;
+  arquivoTipo: string | null;
 };
 
 const incluirUnidade = { unidade: { select: { nome: true } } } as const;
@@ -33,6 +39,9 @@ function paraDTO(linha: LinhaDocumento, hoje: string): DocumentoDTO {
     emAnalise: linha.emAnalise,
     situacao: situacaoDocumento(linha.emAnalise, vencimento, hoje),
     demo: linha.demo,
+    arquivoNome: linha.arquivoNome,
+    arquivoChave: linha.arquivoChave,
+    arquivoTipo: linha.arquivoTipo,
   };
 }
 
@@ -120,12 +129,26 @@ export async function atualizarDocumento(
 }
 
 export async function removerDocumento(usuarioId: string, id: string): Promise<void> {
+  // Busca o documento e a chave do PDF, garantindo que pertence ao usuário.
   const existente = await prisma.documento.findFirst({
     where: { id, usuarioId },
-    select: { nome: true },
+    select: {
+      nome: true,
+      arquivoChave: true,
+    },
   });
+
   if (!existente) throw erroGeral(404, "Documento não encontrado.");
 
+  // Exclui o cadastro do banco de dados.
   await prisma.documento.delete({ where: { id } });
-  await registrarAtividade(usuarioId, "documento", `Documento “${existente.nome}” excluído`);
+
+  // Exclui também o PDF associado, caso exista.
+  await excluirArquivoDocumento(existente.arquivoChave);
+
+  await registrarAtividade(
+    usuarioId,
+    "documento",
+    `Documento “${existente.nome}” excluído`
+  );
 }

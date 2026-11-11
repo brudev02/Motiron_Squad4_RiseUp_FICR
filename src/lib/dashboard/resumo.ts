@@ -102,7 +102,7 @@ export async function carregarAlertas(usuarioId: string): Promise<Alerta[]> {
           ? `Venceu em ${formatarData(d.vencimento)}`
           : `Vence em ${formatarData(d.vencimento)}`,
       gravidade: d.situacao === "Vencido" ? "perigo" : "aviso",
-      href: "/dashboard/documentos",
+      href: "/dashboard/documentos-nova",
     }));
 
   const deTarefas: Alerta[] = tarefas

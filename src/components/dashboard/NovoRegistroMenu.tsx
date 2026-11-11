@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,7 +8,7 @@ import { BOTAO_PRIMARIO } from "./estilos";
 
 const opcoes: { href: string; nome: string; icone: NomeIcone }[] = [
   { href: "/dashboard/unidades?novo=1", nome: "Nova unidade", icone: "predio" },
-  { href: "/dashboard/documentos?novo=1", nome: "Novo documento", icone: "documento" },
+  { href: "/dashboard/documentos-nova?novo=1", nome: "Novo documento", icone: "documento" },
   { href: "/dashboard/tarefas?novo=1", nome: "Nova tarefa", icone: "tarefas" },
 ];
 

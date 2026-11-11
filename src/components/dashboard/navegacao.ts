@@ -15,7 +15,7 @@ export type ItemMenu = {
 export const ITENS_MENU: ItemMenu[] = [
   { href: "/dashboard", nome: "Visão geral", icone: "grid", grupo: "workspace" },
   { href: "/dashboard/unidades", nome: "Unidades", icone: "predio", grupo: "workspace", busca: true },
-  { href: "/dashboard/documentos", nome: "Documentos", icone: "documento", grupo: "workspace", busca: true },
+  { href: "/dashboard/documentos-nova", nome: "Documentos", icone: "documento", grupo: "workspace", busca: true },
   { href: "/dashboard/tarefas", nome: "Tarefas", icone: "tarefas", grupo: "workspace", busca: true },
   { href: "/dashboard/relatorios", nome: "Relatórios", icone: "grafico", grupo: "workspace" },
   { href: "/dashboard/usuarios", nome: "Usuários", icone: "equipe", grupo: "administracao" },

@@ -46,6 +46,11 @@ export type DocumentoDTO = {
   /** Situação já calculada (vencimento + análise). */
   situacao: SituacaoDocumento;
   demo: boolean;
+
+  // Informações do PDF anexado (opcionais).
+  arquivoNome?: string | null;
+  arquivoChave?: string | null;
+  arquivoTipo?: string | null;
 };
 
 export type TarefaDTO = {

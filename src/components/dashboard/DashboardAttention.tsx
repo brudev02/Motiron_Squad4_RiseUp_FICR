@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Icone, type NomeIcone } from "@/components/ui/Icones";
 import { formatarData } from "@/lib/dashboard/datas";
@@ -28,7 +29,7 @@ export function DocumentosAtencao({ documentos }: { documentos: DocumentoDTO[] }
           <p className="mt-1 text-[11px] text-escuro/50">Priorize as próximas renovações</p>
         </div>
         <Link
-          href="/dashboard/documentos"
+          href="/dashboard/documentos-nova"
           className="text-[11px] font-semibold text-painel hover:underline"
         >
           Ver todos
