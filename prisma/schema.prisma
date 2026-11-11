@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -49,6 +50,12 @@ model Documento {
   emAnalise   Boolean   @default(false)
   demo        Boolean   @default(false)
   criadoEm    DateTime  @default(now())
+
+  // Informações do arquivo PDF anexado.
+  // São opcionais para manter os documentos antigos funcionando.
+  arquivoNome  String?
+  arquivoChave String?
+  arquivoTipo  String?
 
   usuarioId String
   usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
