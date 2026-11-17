@@ -50,6 +50,24 @@ export function FormCadastro({ perfil }: Props) {
         autoComplete="name"
         required
       />
+      {perfil === "funcionario" &&  (
+        <Campo
+          rotulo="CPF"
+          name="cpf"
+          placeholder="000.000.000-00"
+          autoComplete="off"
+          required
+          />
+      )}
+      {perfil === "empresa" &&  (
+        <Campo
+          rotulo="CNPJ"
+          name="cnpj"
+          placeholder="00.000.000/0000-00"
+          autoComplete="off"
+          required
+          />
+      )}
       <Campo
         rotulo="E-mail"
         type="email"
@@ -74,7 +92,6 @@ export function FormCadastro({ perfil }: Props) {
         autoComplete="new-password"
         required
       />
-
       {erro && (
         <p role="alert" className="text-sm text-red-300">
           {erro}

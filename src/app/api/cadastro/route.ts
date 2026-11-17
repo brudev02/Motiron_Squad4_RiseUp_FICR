@@ -17,12 +17,40 @@ export async function POST(req: Request) {
       );
     }
 
-    const { nome, email, senha, perfil } = parsed.data;
+    const { nome, email, senha, perfil, cpf, cnpj } = parsed.data;
+    const perfilFinal = perfil ?? "empresa";
+    const cpfNormalizado = perfilFinal === "funcionario"  ? cpf ??  null  : null;
+    const cnpjNormalizado = perfilFinal === "empresa" ? cnpj ?? null : null;
     const emailNormalizado = email.toLowerCase();
-
     const existe = await prisma.usuario.findUnique({
       where: { email: emailNormalizado },
     });
+
+    if (cpfNormalizado) {
+      const cpfExistente  = await prisma.usuario.findUnique({
+        where: {cpf: cpfNormalizado },
+      });
+    
+    if (cpfExistente) { 
+      return NextResponse.json(
+        { erros: { cpf: ["CPF já cadastrado"]}},
+        { status : 409 }
+      );
+    }
+    }
+
+    if (cnpjNormalizado) {
+      const cnpjExistente = await prisma.usuario.findUnique({
+        where: { cnpj: cnpjNormalizado },
+      });
+
+      if (cnpjExistente) {
+        return NextResponse.json(
+          { erros: { cnpj: ["CNPJ já cadastrado"] } },
+          { status: 409 }
+        );
+      }
+    }
 
     if (existe) {
       return NextResponse.json(
@@ -36,7 +64,7 @@ export async function POST(req: Request) {
         {
           erros: {
             senha: [
-              "Esta senha já está em uso por outra conta. Escolha outra senha.",
+              "Senha Indisponivel.",
             ],
           },
         },
@@ -47,7 +75,7 @@ export async function POST(req: Request) {
     const senhaHash = await bcrypt.hash(senha, 12);
 
     await prisma.usuario.create({
-      data: { nome, email: emailNormalizado, senhaHash, perfil: perfil ?? "empresa" },
+      data: { nome, email: emailNormalizado, senhaHash, perfil: perfilFinal, cpf: cpfNormalizado, cnpj: cnpjNormalizado,},
     });
 
     return NextResponse.json({ ok: true }, { status: 201 });
