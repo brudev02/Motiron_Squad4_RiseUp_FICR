@@ -102,16 +102,18 @@ As etapas abaixo representam o planejamento de evolução do projeto. O status d
 - [x] Definição do Design System
 - [x] Implementação de tela de login
 - [x] Implementação do Dashboard
+- [x] Implementação da Aba de Tarefas
+- [x] Implementação da Aba de Documentos
 - [x] Desenvolvimento das listagens e dos detalhes
 - [x] Implementação de recursos de acessibilidade
+- [x] Implementação das avaliações de formulários
+- [x] Controle de Status das unidades
+- [x] Confirmação de conclusão de tarefas
+- [x] Implementar cache e atualização dos dados entre telas
 
 ## Melhorias planejadas
 
-- [ ] Implementação das avaliações de formulários
-- [ ] Controle de Status das unidades
-- [ ] Confirmação de conclusão de tarefas
 - [ ]  Criar uma camada de API ou servidor de dados simulados
-- [ ] Implementar cache e atualização dos dados entre telas
 - [ ] Bloquear a exclusão de unidades com ducumentos pendentes ou tarefas em andamento
 - [ ] Registrar um histórico de alterações
 - [ ] Implementar modo escuro
