@@ -46,11 +46,15 @@ export const documentoSchema = z.object({
 export const tarefaSchema = z.object({
   titulo: texto("Título da tarefa", 150),
   responsavel: texto("Responsável"),
+  // "" = sem unidade vinculada
+  unidadeId: z
+    .string()
+    .trim()
+    .transform((v) => (v === "" ? null : v)),
   prazo: dataOpcional,
   prioridade: z.enum(PRIORIDADES, { message: "Escolha uma prioridade válida." }),
   status: z.enum(STATUS_TAREFA, { message: "Escolha um status válido." }),
 });
-
 export type UnidadeEntrada = z.output<typeof unidadeSchema>;
 export type DocumentoEntrada = z.output<typeof documentoSchema>;
 export type TarefaEntrada = z.output<typeof tarefaSchema>;

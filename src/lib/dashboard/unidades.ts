@@ -90,3 +90,14 @@ export async function removerUnidade(usuarioId: string, id: string): Promise<voi
   await prisma.unidade.delete({ where: { id } });
   await registrarAtividade(usuarioId, "unidade", `Unidade “${existente.nome}” excluída`);
 }
+/** Busca uma unidade da conta; devolve null se não existir ou for de outra conta. */
+export const buscarUnidade = cache(
+  async (usuarioId: string, id: string): Promise<UnidadeDTO | null> => {
+    const linha = await prisma.unidade.findFirst({
+      where: { id, usuarioId },
+      include: contarDocumentos,
+    });
+
+    return linha ? paraDTO(linha) : null;
+  }
+);

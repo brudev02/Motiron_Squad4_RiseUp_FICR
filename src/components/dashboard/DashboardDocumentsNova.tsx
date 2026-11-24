@@ -200,7 +200,12 @@ export function DashboardDocumentsNova({
       return correspondeSituacao && (!busca || texto.includes(busca));
     });
   }, [documentos, filtro, termo]);
-
+  // No formulário, só aparecem unidades ativas. Ao editar, a unidade
+  // atual do documento continua visível (mesmo inativa) para não perder o vínculo.
+  const unidadesDisponiveis = unidades.filter(
+    (unidade) =>
+      unidade.situacao === "Ativa" || unidade.id === documentoEditando?.unidadeId
+  );
   // Limpa os dados temporários ao abrir um novo cadastro.
   function abrirCadastro() {
     setDocumentoEditando(null);
@@ -806,11 +811,13 @@ export function DashboardDocumentsNova({
                 >
                   <option value="">Sem unidade vinculada</option>
 
-                  {unidades.map((unidade) => (
-                    <option key={unidade.id} value={unidade.id}>
-                      {unidade.nome} ({unidade.situacao})
-                    </option>
-                  ))}
+                  
+                {unidadesDisponiveis.map((unidade) => (
+  <option key={unidade.id} value={unidade.id}>
+    {unidade.nome}
+    {unidade.situacao === "Inativa" ? " (Inativa)" : ""}
+  </option>
+))}
                 </select>
               </label>
 

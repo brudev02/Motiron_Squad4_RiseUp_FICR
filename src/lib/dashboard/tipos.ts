@@ -57,6 +57,8 @@ export type TarefaDTO = {
   id: string;
   titulo: string;
   responsavel: string;
+    unidadeId: string | null;
+  unidadeNome: string | null;
   /** AAAA-MM-DD ou null */
   prazo: string | null;
   prioridade: Prioridade;

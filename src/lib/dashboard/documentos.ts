@@ -66,17 +66,23 @@ export const listarDocumentos = cache(
   }
 );
 
-/** A unidade escolhida precisa pertencer à mesma conta. */
+/** A unidade escolhida precisa pertencer à mesma conta e estar ativa. */
 async function validarUnidade(usuarioId: string, unidadeId: string | null) {
   if (!unidadeId) return;
 
   const unidade = await prisma.unidade.findFirst({
     where: { id: unidadeId, usuarioId },
-    select: { id: true },
+    select: { id: true, situacao: true },
   });
 
   if (!unidade) {
     throw new ErroApi(400, { unidadeId: ["Unidade inválida."] });
+  }
+
+  if (unidade.situacao === "Inativa") {
+    throw new ErroApi(400, {
+      unidadeId: ["Não é possível vincular documentos a uma unidade inativa."],
+    });
   }
 }
 
@@ -110,13 +116,16 @@ export async function atualizarDocumento(
   id: string,
   dados: DocumentoEntrada
 ): Promise<DocumentoDTO> {
-  const existente = await prisma.documento.findFirst({
+    const existente = await prisma.documento.findFirst({
     where: { id, usuarioId },
-    select: { id: true },
+    select: { id: true, unidadeId: true },
   });
   if (!existente) throw erroGeral(404, "Documento não encontrado.");
 
-  await validarUnidade(usuarioId, dados.unidadeId);
+  // Só valida se a unidade foi trocada: manter o vínculo antigo é permitido.
+  if (dados.unidadeId !== existente.unidadeId) {
+    await validarUnidade(usuarioId, dados.unidadeId);
+  }
 
   const linha = await prisma.documento.update({
     where: { id },

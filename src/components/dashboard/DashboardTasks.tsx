@@ -23,14 +23,21 @@ import { ConfirmarAcao } from "./ui/ConfirmarAcao";
 import { FormularioRegistro } from "./ui/FormularioRegistro";
 import { Modal } from "./ui/Modal";
 
+type UnidadeOpcao = {
+  id: string;
+  nome: string;
+  situacao: "Ativa" | "Inativa";
+};
+
 type Props = {
   tarefas: TarefaDTO[];
+  unidades: UnidadeOpcao[];
   abrirNovo: boolean;
 };
 
 // Gestão de tarefas: prazo, prioridade e status, com destaque para as
 // atrasadas, pesquisa, filtro por status e atalho para concluir.
-export function DashboardTasks({ tarefas, abrirNovo }: Props) {
+export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
   const { busca } = useBusca();
   const edicao = useEdicao<TarefaDTO>("/dashboard/tarefas", abrirNovo);
   const { salvar, excluir, ocupado } = useRecurso("/api/tarefas", {
@@ -50,12 +57,18 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
       tarefas.filter(
         (t) =>
           (!status || t.status === status) &&
-          correspondeBusca([t.titulo, t.responsavel], busca)
+          correspondeBusca([t.titulo, t.responsavel, t.unidadeNome ?? ""], busca)
       ),
     [tarefas, status, busca]
   );
 
   const editando = edicao.alvo && edicao.alvo !== "novo" ? edicao.alvo : null;
+
+  // No formulário, só aparecem unidades ativas. Ao editar, a unidade atual
+  // da tarefa continua visível (mesmo inativa) para não perder o vínculo.
+  const unidadesDisponiveis = unidades.filter(
+    (u) => u.situacao === "Ativa" || u.id === editando?.unidadeId
+  );
 
   async function confirmarExclusao() {
     if (!paraExcluir) return;
@@ -67,6 +80,7 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
     return salvar(tarefa.id, {
       titulo: tarefa.titulo,
       responsavel: tarefa.responsavel,
+      unidadeId: tarefa.unidadeId ?? "",
       prazo: tarefa.prazo ?? "",
       prioridade: tarefa.prioridade,
       status: "Concluída",
@@ -93,7 +107,7 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
       </div>
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row">
-        <CampoBusca placeholder="Buscar por tarefa ou responsável…" className="flex-1 md:hidden" />
+        <CampoBusca placeholder="Buscar por tarefa, responsável ou unidade…" className="flex-1 md:hidden" />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value as "" | StatusTarefa)}
@@ -125,6 +139,7 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
             <thead>
               <tr className="border-b border-escuro/10">
                 <th className={TH}>Tarefa</th>
+                <th className={TH}>Unidade</th>
                 <th className={TH}>Responsável</th>
                 <th className={TH}>Prazo</th>
                 <th className={TH}>Prioridade</th>
@@ -139,6 +154,7 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
                     {t.titulo}
                     {t.demo && <SeloExemplo />}
                   </td>
+                  <td className={TD}>{t.unidadeNome ?? "Sem unidade"}</td>
                   <td className={TD}>{t.responsavel}</td>
                   <td className={`${TD} whitespace-nowrap ${t.atrasada ? "font-semibold text-perigo" : ""}`}>
                     {formatarData(t.prazo)}
@@ -181,7 +197,7 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
       <Modal
         aberto={edicao.alvo !== null}
         titulo={editando ? "Editar tarefa" : "Nova tarefa"}
-        descricao="Defina o responsável, o prazo e a prioridade."
+        descricao="Defina a unidade, o responsável, o prazo e a prioridade."
         onFechar={edicao.fechar}
       >
         <FormularioRegistro
@@ -189,6 +205,7 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
           ler={(d) => ({
             titulo: valorDoCampo(d, "titulo"),
             responsavel: valorDoCampo(d, "responsavel"),
+            unidadeId: valorDoCampo(d, "unidadeId"),
             prazo: valorDoCampo(d, "prazo"),
             prioridade: valorDoCampo(d, "prioridade"),
             status: valorDoCampo(d, "status"),
@@ -205,6 +222,17 @@ export function DashboardTasks({ tarefas, abrirNovo }: Props) {
             <>
               <CampoForm rotulo="Título da tarefa" erro={erros.titulo}>
                 <input name="titulo" defaultValue={editando?.titulo} className={CONTROLE} autoFocus />
+              </CampoForm>
+              <CampoForm rotulo="Unidade" erro={erros.unidadeId}>
+                <select name="unidadeId" defaultValue={editando?.unidadeId ?? ""} className={CONTROLE}>
+                  <option value="">Sem unidade vinculada</option>
+                  {unidadesDisponiveis.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.nome}
+                      {u.situacao === "Inativa" ? " (Inativa)" : ""}
+                    </option>
+                  ))}
+                </select>
               </CampoForm>
               <CampoForm rotulo="Responsável" erro={erros.responsavel}>
                 <input name="responsavel" defaultValue={editando?.responsavel} className={CONTROLE} />

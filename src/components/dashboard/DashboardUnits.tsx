@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Icone } from "@/components/ui/Icones";
 import { correspondeBusca, valorDoCampo } from "@/lib/dashboard/busca";
@@ -21,6 +22,8 @@ import { ConfirmarAcao } from "./ui/ConfirmarAcao";
 import { FormularioRegistro } from "./ui/FormularioRegistro";
 import { Modal } from "./ui/Modal";
 
+const POR_PAGINA = 8;
+
 type Props = {
   unidades: UnidadeDTO[];
   /** Abre o cadastro ao entrar (atalho ?novo=1 da Visão geral). */
@@ -28,8 +31,8 @@ type Props = {
 };
 
 // Gestão de unidades: cadastro, edição, exclusão, pesquisa (nome,
-// responsável ou cidade), filtro por situação e indicadores. Os dados vêm
-// do banco (Prisma/SQLite) pelas APIs /api/unidades.
+// responsável ou cidade), filtro por situação, paginação e indicadores.
+// Os dados vêm do banco (Prisma/SQLite) pelas APIs /api/unidades.
 export function DashboardUnits({ unidades, abrirNovo }: Props) {
   const { busca } = useBusca();
   const edicao = useEdicao<UnidadeDTO>("/dashboard/unidades", abrirNovo);
@@ -53,6 +56,21 @@ export function DashboardUnits({ unidades, abrirNovo }: Props) {
       ),
     [unidades, situacao, busca]
   );
+
+  const [pagina, setPagina] = useState(1);
+
+  // Volta para a página 1 quando a busca ou o filtro mudam.
+  const chaveFiltro = `${situacao}|${busca}`;
+  const [chaveAnterior, setChaveAnterior] = useState(chaveFiltro);
+  if (chaveFiltro !== chaveAnterior) {
+    setChaveAnterior(chaveFiltro);
+    setPagina(1);
+  }
+
+  const totalPaginas = Math.max(1, Math.ceil(visiveis.length / POR_PAGINA));
+  const paginaAtual = Math.min(pagina, totalPaginas); // evita página vazia após excluir
+  const inicio = (paginaAtual - 1) * POR_PAGINA;
+  const paginaVisivel = visiveis.slice(inicio, inicio + POR_PAGINA);
 
   const editando = edicao.alvo && edicao.alvo !== "novo" ? edicao.alvo : null;
 
@@ -109,37 +127,76 @@ export function DashboardUnits({ unidades, abrirNovo }: Props) {
         ) : visiveis.length === 0 ? (
           <EstadoVazio titulo="Nada encontrado" texto="Nenhuma unidade corresponde à pesquisa ou ao filtro escolhido." />
         ) : (
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-escuro/10">
-                <th className={TH}>Unidade</th>
-                <th className={TH}>Responsável</th>
-                <th className={TH}>Cidade</th>
-                <th className={TH}>Documentos</th>
-                <th className={TH}>Situação</th>
-                <th className={`${TH} text-right`}>Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-escuro/5">
-              {visiveis.map((u) => (
-                <tr key={u.id}>
-                  <td className={`${TD} font-medium`}>
-                    {u.nome}
-                    {u.demo && <SeloExemplo />}
-                  </td>
-                  <td className={TD}>{u.responsavel}</td>
-                  <td className={TD}>{u.cidade}</td>
-                  <td className={TD}>{u.qtdDocumentos}</td>
-                  <td className={TD}>
-                    <BadgeStatus tom={tomUnidade[u.situacao]}>{u.situacao}</BadgeStatus>
-                  </td>
-                  <td className={TD}>
-                    <AcoesLinha nome={u.nome} onEditar={() => edicao.editar(u)} onExcluir={() => setParaExcluir(u)} />
-                  </td>
+          <>
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-escuro/10">
+                  <th className={TH}>Unidade</th>
+                  <th className={TH}>Responsável</th>
+                  <th className={TH}>Cidade</th>
+                  <th className={TH}>Documentos</th>
+                  <th className={TH}>Situação</th>
+                  <th className={`${TH} text-right`}>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-escuro/5">
+                {paginaVisivel.map((u) => (
+                  <tr key={u.id}>
+                    <td className={`${TD} font-medium`}>
+                      <Link
+                        href={`/dashboard/unidades/${u.id}`}
+                        className="hover:underline focus-visible:underline"
+                      >
+                        {u.nome}
+                      </Link>
+                      {u.demo && <SeloExemplo />}
+                    </td>
+                    <td className={TD}>{u.responsavel}</td>
+                    <td className={TD}>{u.cidade}</td>
+                    <td className={TD}>{u.qtdDocumentos}</td>
+                    <td className={TD}>
+                      <BadgeStatus tom={tomUnidade[u.situacao]}>{u.situacao}</BadgeStatus>
+                    </td>
+                    <td className={TD}>
+                      <AcoesLinha nome={u.nome} onEditar={() => edicao.editar(u)} onExcluir={() => setParaExcluir(u)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <nav
+              aria-label="Paginação das unidades"
+              className="flex flex-col items-center justify-between gap-3 border-t border-escuro/10 px-4 py-3 text-xs sm:flex-row"
+            >
+              <p aria-live="polite">
+                Mostrando {inicio + 1}–{Math.min(inicio + POR_PAGINA, visiveis.length)} de {visiveis.length}
+              </p>
+              {totalPaginas > 1 && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPagina(paginaAtual - 1)}
+                    disabled={paginaAtual === 1}
+                    className="rounded-lg border border-escuro/15 px-3 py-1.5 font-medium disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Anterior
+                  </button>
+                  <span>
+                    Página {paginaAtual} de {totalPaginas}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPagina(paginaAtual + 1)}
+                    disabled={paginaAtual === totalPaginas}
+                    className="rounded-lg border border-escuro/15 px-3 py-1.5 font-medium disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Próxima
+                  </button>
+                </div>
+              )}
+            </nav>
+          </>
         )}
       </section>
 
