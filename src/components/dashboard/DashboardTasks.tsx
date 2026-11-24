@@ -9,6 +9,7 @@ import {
   STATUS_TAREFA,
   type StatusTarefa,
   type TarefaDTO,
+  type UnidadeDTO,
 } from "@/lib/dashboard/tipos";
 import { tarefaSchema } from "@/lib/validacao/dashboard";
 import { BOTAO_ICONE, BOTAO_PRIMARIO, CARTAO, CONTROLE, TD, TH } from "./estilos";
@@ -23,15 +24,9 @@ import { ConfirmarAcao } from "./ui/ConfirmarAcao";
 import { FormularioRegistro } from "./ui/FormularioRegistro";
 import { Modal } from "./ui/Modal";
 
-type UnidadeOpcao = {
-  id: string;
-  nome: string;
-  situacao: "Ativa" | "Inativa";
-};
-
 type Props = {
   tarefas: TarefaDTO[];
-  unidades: UnidadeOpcao[];
+  unidades: UnidadeDTO[];
   abrirNovo: boolean;
 };
 
@@ -57,18 +52,12 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
       tarefas.filter(
         (t) =>
           (!status || t.status === status) &&
-          correspondeBusca([t.titulo, t.responsavel, t.unidadeNome ?? ""], busca)
+          correspondeBusca([t.titulo, t.responsavel], busca)
       ),
     [tarefas, status, busca]
   );
 
   const editando = edicao.alvo && edicao.alvo !== "novo" ? edicao.alvo : null;
-
-  // No formulário, só aparecem unidades ativas. Ao editar, a unidade atual
-  // da tarefa continua visível (mesmo inativa) para não perder o vínculo.
-  const unidadesDisponiveis = unidades.filter(
-    (u) => u.situacao === "Ativa" || u.id === editando?.unidadeId
-  );
 
   async function confirmarExclusao() {
     if (!paraExcluir) return;
@@ -77,10 +66,12 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
   }
 
   function concluir(tarefa: TarefaDTO) {
+    if (tarefa.somenteLeitura || !window.confirm("Confirma a conclusão desta tarefa?")) return;
     return salvar(tarefa.id, {
       titulo: tarefa.titulo,
+      unidadeId: tarefa.unidadeId,
+      confirmarConclusao: true,
       responsavel: tarefa.responsavel,
-      unidadeId: tarefa.unidadeId ?? "",
       prazo: tarefa.prazo ?? "",
       prioridade: tarefa.prioridade,
       status: "Concluída",
@@ -107,7 +98,7 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
       </div>
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row">
-        <CampoBusca placeholder="Buscar por tarefa, responsável ou unidade…" className="flex-1 md:hidden" />
+        <CampoBusca placeholder="Buscar por tarefa ou responsável…" className="flex-1 md:hidden" />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value as "" | StatusTarefa)}
@@ -167,12 +158,12 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
                     <BadgeStatus tom={tomStatusTarefa[t.status]}>{t.status}</BadgeStatus>
                   </td>
                   <td className={TD}>
-                    <AcoesLinha
+                    {t.somenteLeitura ? <span>Somente leitura</span> : <AcoesLinha
                       nome={t.titulo}
                       onEditar={() => edicao.editar(t)}
                       onExcluir={() => setParaExcluir(t)}
                       extra={
-                        t.status !== "Concluída" && (
+                        t.status !== "Concluída" && t.unidadeId !== null && (
                           <button
                             type="button"
                             onClick={() => concluir(t)}
@@ -185,7 +176,7 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
                           </button>
                         )
                       }
-                    />
+                    />}
                   </td>
                 </tr>
               ))}
@@ -197,21 +188,24 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
       <Modal
         aberto={edicao.alvo !== null}
         titulo={editando ? "Editar tarefa" : "Nova tarefa"}
-        descricao="Defina a unidade, o responsável, o prazo e a prioridade."
+        descricao="Defina o responsável, o prazo e a prioridade."
         onFechar={edicao.fechar}
       >
         <FormularioRegistro
           schema={tarefaSchema}
           ler={(d) => ({
             titulo: valorDoCampo(d, "titulo"),
-            responsavel: valorDoCampo(d, "responsavel"),
             unidadeId: valorDoCampo(d, "unidadeId"),
+            responsavel: valorDoCampo(d, "responsavel"),
             prazo: valorDoCampo(d, "prazo"),
             prioridade: valorDoCampo(d, "prioridade"),
             status: valorDoCampo(d, "status"),
           })}
           onSalvar={async (dados) => {
-            const resposta = await salvar(editando?.id ?? null, dados);
+            if (!dados.unidadeId) return { ok: false as const, erros: { unidadeId: "Selecione uma unidade ativa." }, mensagem: "Selecione uma unidade ativa." };
+            const precisaConfirmar = dados.status === "Concluída" && editando?.status !== "Concluída";
+            if (precisaConfirmar && !window.confirm("Confirma a conclusão desta tarefa?")) return { ok: false as const, erros: {}, mensagem: "Conclusão cancelada." };
+            const resposta = await salvar(editando?.id ?? null, { ...dados, confirmarConclusao: precisaConfirmar });
             if (resposta.ok) edicao.fechar();
             return resposta;
           }}
@@ -224,14 +218,9 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
                 <input name="titulo" defaultValue={editando?.titulo} className={CONTROLE} autoFocus />
               </CampoForm>
               <CampoForm rotulo="Unidade" erro={erros.unidadeId}>
-                <select name="unidadeId" defaultValue={editando?.unidadeId ?? ""} className={CONTROLE}>
-                  <option value="">Sem unidade vinculada</option>
-                  {unidadesDisponiveis.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.nome}
-                      {u.situacao === "Inativa" ? " (Inativa)" : ""}
-                    </option>
-                  ))}
+                <select name="unidadeId" defaultValue={editando?.unidadeId ?? ""} className={CONTROLE} required>
+                  <option value="">Selecione uma unidade ativa</option>
+                  {unidades.map(u => <option key={u.id} value={u.id} disabled={u.situacao === "Inativa"}>{u.nome} ({u.situacao})</option>)}
                 </select>
               </CampoForm>
               <CampoForm rotulo="Responsável" erro={erros.responsavel}>

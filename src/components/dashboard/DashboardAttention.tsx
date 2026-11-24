@@ -39,7 +39,7 @@ export function DocumentosAtencao({ documentos }: { documentos: DocumentoDTO[] }
       {documentos.length === 0 ? (
         <EstadoVazio
           titulo="Nada exige atenção agora"
-          texto="Documentos vencidos ou que vencem nos próximos 30 dias aparecem aqui."
+          texto="Documentos vencidos ou que vencem nos próximos 15 dias aparecem aqui."
         />
       ) : (
         <div className="overflow-x-auto">

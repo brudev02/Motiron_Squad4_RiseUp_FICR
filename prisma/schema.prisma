@@ -38,6 +38,7 @@ model Unidade {
   usuarioId  String
   usuario    Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   documentos Documento[]
+  tarefas Tarefa[]
 
   @@index([usuarioId])
 }
@@ -82,7 +83,11 @@ model Tarefa {
   usuarioId String
   usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
+  unidadeId String?
+  unidade Unidade? @relation(fields: [unidadeId], references: [id], onDelete: SetNull)
+
   @@index([usuarioId])
+  @@index([unidadeId])
 }
 
 // Histórico exibido em "Atividade recente".

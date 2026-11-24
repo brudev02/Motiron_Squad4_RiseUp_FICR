@@ -26,21 +26,20 @@ const DOCUMENTOS = [
   { nome: "Licença de publicidade", unidade: 0, responsavel: "Ana Silva", dias: 180, emAnalise: false },
 ] as const;
 
-// unidade = índice em UNIDADES (a mesma da pessoa responsável)
 const TAREFAS = [
-  { titulo: "Enviar relatório trimestral", unidade: 0, responsavel: "Ana Silva", dias: -150, prioridade: "Média", status: "Concluída" },
-  { titulo: "Renovar contrato de limpeza", unidade: 3, responsavel: "Pedro Lima", dias: -128, prioridade: "Baixa", status: "Concluída" },
-  { titulo: "Vistoria elétrica anual", unidade: 1, responsavel: "Carlos Souza", dias: -100, prioridade: "Alta", status: "Concluída" },
-  { titulo: "Atualizar cadastro de fornecedores", unidade: 2, responsavel: "Maria Santos", dias: -92, prioridade: "Média", status: "Concluída" },
-  { titulo: "Treinamento de brigada de incêndio", unidade: 0, responsavel: "Ana Silva", dias: -66, prioridade: "Alta", status: "Concluída" },
-  { titulo: "Revisar apólices de seguro", unidade: 3, responsavel: "Pedro Lima", dias: -40, prioridade: "Média", status: "Concluída" },
-  { titulo: "Organizar arquivo físico", unidade: 2, responsavel: "Maria Santos", dias: -35, prioridade: "Baixa", status: "Concluída" },
-  { titulo: "Protocolar renovação de licença", unidade: 1, responsavel: "Carlos Souza", dias: -18, prioridade: "Alta", status: "Concluída" },
-  { titulo: "Atualizar documentos da Unidade Olinda", unidade: 1, responsavel: "Carlos Souza", dias: -3, prioridade: "Alta", status: "Pendente" },
-  { titulo: "Revisar contratos de fornecedores", unidade: 3, responsavel: "Pedro Lima", dias: 3, prioridade: "Média", status: "Pendente" },
-  { titulo: "Emitir certidões negativas", unidade: 2, responsavel: "Maria Santos", dias: 7, prioridade: "Média", status: "Em andamento" },
-  { titulo: "Renovar alvará de funcionamento", unidade: 0, responsavel: "Ana Silva", dias: 10, prioridade: "Alta", status: "Em andamento" },
-  { titulo: "Agendar vistoria sanitária", unidade: 1, responsavel: "Carlos Souza", dias: 20, prioridade: "Baixa", status: "Pendente" },
+  { titulo: "Enviar relatório trimestral", responsavel: "Ana Silva", dias: -150, prioridade: "Média", status: "Concluída" },
+  { titulo: "Renovar contrato de limpeza", responsavel: "Pedro Lima", dias: -128, prioridade: "Baixa", status: "Concluída" },
+  { titulo: "Vistoria elétrica anual", responsavel: "Carlos Souza", dias: -100, prioridade: "Alta", status: "Concluída" },
+  { titulo: "Atualizar cadastro de fornecedores", responsavel: "Maria Santos", dias: -92, prioridade: "Média", status: "Concluída" },
+  { titulo: "Treinamento de brigada de incêndio", responsavel: "Ana Silva", dias: -66, prioridade: "Alta", status: "Concluída" },
+  { titulo: "Revisar apólices de seguro", responsavel: "Pedro Lima", dias: -40, prioridade: "Média", status: "Concluída" },
+  { titulo: "Organizar arquivo físico", responsavel: "Maria Santos", dias: -35, prioridade: "Baixa", status: "Concluída" },
+  { titulo: "Protocolar renovação de licença", responsavel: "Carlos Souza", dias: -18, prioridade: "Alta", status: "Concluída" },
+  { titulo: "Atualizar documentos da Unidade Olinda", responsavel: "Carlos Souza", dias: -3, prioridade: "Alta", status: "Pendente" },
+  { titulo: "Revisar contratos de fornecedores", responsavel: "Pedro Lima", dias: 3, prioridade: "Média", status: "Pendente" },
+  { titulo: "Emitir certidões negativas", responsavel: "Maria Santos", dias: 7, prioridade: "Média", status: "Em andamento" },
+  { titulo: "Renovar alvará de funcionamento", responsavel: "Ana Silva", dias: 10, prioridade: "Alta", status: "Em andamento" },
+  { titulo: "Agendar vistoria sanitária", responsavel: "Carlos Souza", dias: 20, prioridade: "Baixa", status: "Pendente" },
 ] as const;
 
 export async function carregarDadosExemplo(usuarioId: string): Promise<void> {
@@ -58,7 +57,7 @@ export async function carregarDadosExemplo(usuarioId: string): Promise<void> {
 
     for (const u of UNIDADES) {
       const criada = await tx.unidade.create({
-        data: { ...u, usuarioId, demo: true },
+        data: { ...u, situacao: "Ativa", usuarioId, demo: true },
         select: { id: true },
       });
       ids.push(criada.id);
@@ -77,17 +76,19 @@ export async function carregarDadosExemplo(usuarioId: string): Promise<void> {
     });
 
     await tx.tarefa.createMany({
-      data: TAREFAS.map((t) => ({
+      data: TAREFAS.map((t, indice) => ({
+        unidadeId: ids[indice % ids.length],
         titulo: t.titulo,
         responsavel: t.responsavel,
         prioridade: t.prioridade,
         status: t.status,
         prazo: data(t.dias),
-        unidadeId: ids[t.unidade],
         usuarioId,
         demo: true,
       })),
     });
+    // Simula uma unidade desativada depois de receber seus registros.
+    await tx.unidade.updateMany({ where: { id: { in: UNIDADES.flatMap((u, i) => u.situacao === "Inativa" ? [ids[i]] : []) }, usuarioId }, data: { situacao: "Inativa" } });
   });
 
   await registrarAtividade(usuarioId, "sistema", "Dados de exemplo carregados");
@@ -99,7 +100,7 @@ export async function removerDadosExemplo(usuarioId: string): Promise<void> {
   await prisma.$transaction([
     prisma.documento.deleteMany({ where: { usuarioId, demo: true } }),
     prisma.tarefa.deleteMany({ where: { usuarioId, demo: true } }),
-    prisma.unidade.deleteMany({ where: { usuarioId, demo: true } }),
+    prisma.unidade.deleteMany({ where: { usuarioId, demo: true, documentos: { none: { demo: false } }, tarefas: { none: { demo: false } } } }),
   ]);
 
   await registrarAtividade(usuarioId, "sistema", "Dados de exemplo removidos");

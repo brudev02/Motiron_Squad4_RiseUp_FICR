@@ -26,7 +26,7 @@ import { Modal } from "./ui/Modal";
 type Props = {
   documentos: DocumentoDTO[];
   /** Unidades da conta, para vincular o documento. */
-  unidades: Pick<UnidadeDTO, "id" | "nome">[];
+  unidades: Pick<UnidadeDTO, "id" | "nome" | "situacao">[];
   abrirNovo: boolean;
 };
 
@@ -79,7 +79,7 @@ export function DashboardDocuments({ documentos, unidades, abrirNovo }: Props) {
       <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <CartaoIndicador titulo="Documentos" valor={documentos.length} nota="Monitorados na conta" icone="documento" />
         <CartaoIndicador titulo="Vigentes" valor={contar("Vigente")} nota="Dentro da validade" icone="checkCirculo" tom="ok" />
-        <CartaoIndicador titulo="A vencer" valor={contar("A vencer")} nota="Nos próximos 30 dias" icone="relogio" tom="aviso" />
+        <CartaoIndicador titulo="A vencer" valor={contar("A vencer")} nota="Nos próximos 15 dias" icone="relogio" tom="aviso" />
         <CartaoIndicador titulo="Vencidos" valor={contar("Vencido")} nota="Exigem renovação" icone="alerta" tom="perigo" />
       </div>
 
@@ -137,7 +137,7 @@ export function DashboardDocuments({ documentos, unidades, abrirNovo }: Props) {
                     <BadgeStatus tom={tomDocumento[d.situacao]}>{d.situacao}</BadgeStatus>
                   </td>
                   <td className={TD}>
-                    <AcoesLinha nome={d.nome} onEditar={() => edicao.editar(d)} onExcluir={() => setParaExcluir(d)} />
+                    {d.somenteLeitura ? <span>Somente leitura</span> : <AcoesLinha nome={d.nome} onEditar={() => edicao.editar(d)} onExcluir={() => setParaExcluir(d)} />}
                   </td>
                 </tr>
               ))}
@@ -181,7 +181,7 @@ export function DashboardDocuments({ documentos, unidades, abrirNovo }: Props) {
                 <select name="unidadeId" defaultValue={editando?.unidadeId ?? ""} className={CONTROLE}>
                   <option value="">Sem unidade vinculada</option>
                   {unidades.map((u) => (
-                    <option key={u.id} value={u.id}>{u.nome}</option>
+                    <option key={u.id} value={u.id} disabled={u.situacao === "Inativa"}>{u.nome} ({u.situacao})</option>
                   ))}
                 </select>
               </CampoForm>
@@ -190,7 +190,7 @@ export function DashboardDocuments({ documentos, unidades, abrirNovo }: Props) {
               </CampoForm>
               <label className="flex items-center gap-2 text-xs text-escuro/70">
                 <input type="checkbox" name="emAnalise" defaultChecked={editando?.emAnalise ?? false} className="accent-painel" />
-                Documento em análise (renovação protocolada)
+                Renovação protocolada (não altera a validade)
               </label>
             </>
           )}

@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
 
+import { exigirRegistroEditavel } from "@/lib/dashboard/unidade-regras";
 import { prisma } from "@/lib/prisma";
 import {
   exigirUsuarioApi,
@@ -36,6 +37,7 @@ async function buscarDocumento(id: string, usuarioId: string) {
       arquivoNome: true,
       arquivoChave: true,
       arquivoTipo: true,
+      unidade: { select: { situacao: true } },
     },
   });
 
@@ -57,6 +59,7 @@ export async function POST(_req: Request, contexto: ContextoRota) {
 
     const documento = await buscarDocumento(id, usuario.id);
 
+    exigirRegistroEditavel(documento.unidade);
     const formulario = await _req.formData();
     const arquivo = formulario.get("arquivo");
 
@@ -163,6 +166,7 @@ export async function DELETE(_req: Request, contexto: ContextoRota) {
 
     const documento = await buscarDocumento(id, usuario.id);
 
+    exigirRegistroEditavel(documento.unidade);
     if (!documento.arquivoChave) {
       throw erroGeral(404, "Este documento não possui PDF anexado.");
     }

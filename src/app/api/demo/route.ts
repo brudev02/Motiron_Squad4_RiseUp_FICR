@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { exigirUsuarioApi, lerEValidar, responderErro } from "@/lib/api";
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
       await removerDadosExemplo(usuario.id);
     }
 
+    revalidatePath("/dashboard", "layout");
     return NextResponse.json({ ok: true });
   } catch (erro) {
     return responderErro(erro);

@@ -7,16 +7,13 @@ import {
 
 /**
  * Situação de um documento.
- * - "Em análise" é uma escolha manual e tem prioridade.
  * - Sem validade informada o documento é considerado "Vigente".
- * - Com validade: vencido (data passada), a vencer (até 30 dias) ou vigente.
+ * - Com validade: vencido (data passada), a vencer (até 15 dias) ou vigente.
  */
 export function situacaoDocumento(
-  emAnalise: boolean,
   vencimento: string | null,
   hoje: string
 ): SituacaoDocumento {
-  if (emAnalise) return "Em análise";
   if (!vencimento) return "Vigente";
 
   const dias = diasEntre(hoje, vencimento);

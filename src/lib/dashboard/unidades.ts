@@ -81,23 +81,14 @@ export async function atualizarUnidade(
 export async function removerUnidade(usuarioId: string, id: string): Promise<void> {
   const existente = await prisma.unidade.findFirst({
     where: { id, usuarioId },
-    select: { nome: true },
+    select: { nome: true, situacao: true, _count: { select: { documentos: true, tarefas: true } } },
   });
   if (!existente) throw erroGeral(404, "Unidade não encontrada.");
+
+  if (existente.situacao === "Inativa" && (existente._count.documentos || existente._count.tarefas)) throw erroGeral(409, "Reative a unidade antes de excluir registros vinculados.");
 
   // Documentos vinculados continuam existindo, apenas sem unidade
   // (onDelete: SetNull no schema).
   await prisma.unidade.delete({ where: { id } });
   await registrarAtividade(usuarioId, "unidade", `Unidade “${existente.nome}” excluída`);
 }
-/** Busca uma unidade da conta; devolve null se não existir ou for de outra conta. */
-export const buscarUnidade = cache(
-  async (usuarioId: string, id: string): Promise<UnidadeDTO | null> => {
-    const linha = await prisma.unidade.findFirst({
-      where: { id, usuarioId },
-      include: contarDocumentos,
-    });
-
-    return linha ? paraDTO(linha) : null;
-  }
-);

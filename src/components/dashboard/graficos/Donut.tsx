@@ -4,7 +4,6 @@ import type { FatiaDistribuicao, SituacaoDocumento } from "@/lib/dashboard/tipos
 // As classes aparecem por extenso para o Tailwind gerá-las.
 export const COR_SITUACAO: Record<SituacaoDocumento, { traco: string; ponto: string }> = {
   Vigente: { traco: "stroke-painel", ponto: "bg-painel" },
-  "Em análise": { traco: "stroke-campo", ponto: "bg-campo" },
   "A vencer": { traco: "stroke-ambar", ponto: "bg-ambar" },
   Vencido: { traco: "stroke-perigo", ponto: "bg-perigo" },
 };

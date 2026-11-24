@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
-import { ErroApi, erroGeral } from "@/lib/api";
+import { validarUnidadeAtiva, exigirRegistroEditavel } from "./unidade-regras";
+import { erroGeral } from "@/lib/api";
 import type { TarefaEntrada } from "@/lib/validacao/dashboard";
 import { registrarAtividade } from "./atividades";
 import { deDataUTC, hojeISO, paraDataUTC } from "./datas";
@@ -16,10 +17,10 @@ type LinhaTarefa = {
   status: string;
   demo: boolean;
   unidadeId: string | null;
-  unidade: { nome: string } | null;
+  unidade: { nome: string; situacao: string } | null;
 };
 
-const incluirUnidade = { unidade: { select: { nome: true } } } as const;
+const incluirUnidade = { unidade: { select: { nome: true, situacao: true } } } as const;
 
 function paraDTO(linha: LinhaTarefa, hoje: string): TarefaDTO {
   const prazo = linha.prazo ? deDataUTC(linha.prazo) : null;
@@ -28,9 +29,10 @@ function paraDTO(linha: LinhaTarefa, hoje: string): TarefaDTO {
   return {
     id: linha.id,
     titulo: linha.titulo,
-    responsavel: linha.responsavel,
     unidadeId: linha.unidadeId,
     unidadeNome: linha.unidade?.nome ?? null,
+    somenteLeitura: linha.unidade?.situacao === "Inativa",
+    responsavel: linha.responsavel,
     prazo,
     prioridade: linha.prioridade as Prioridade,
     status,
@@ -54,40 +56,17 @@ function ordenar(a: TarefaDTO, b: TarefaDTO): number {
 export const listarTarefas = cache(
   async (usuarioId: string): Promise<TarefaDTO[]> => {
     const hoje = hojeISO();
-    const linhas = await prisma.tarefa.findMany({
-      where: { usuarioId },
-      include: incluirUnidade,
-    });
+    const linhas = await prisma.tarefa.findMany({ where: { usuarioId }, include: incluirUnidade });
 
     return linhas.map((linha) => paraDTO(linha, hoje)).sort(ordenar);
   }
 );
 
-/** A unidade escolhida precisa pertencer à mesma conta e estar ativa. */
-async function validarUnidade(usuarioId: string, unidadeId: string | null) {
-  if (!unidadeId) return;
-
-  const unidade = await prisma.unidade.findFirst({
-    where: { id: unidadeId, usuarioId },
-    select: { id: true, situacao: true },
-  });
-
-  if (!unidade) {
-    throw new ErroApi(400, { unidadeId: ["Unidade inválida."] });
-  }
-
-  if (unidade.situacao === "Inativa") {
-    throw new ErroApi(400, {
-      unidadeId: ["Não é possível vincular tarefas a uma unidade inativa."],
-    });
-  }
-}
-
 function dadosParaBanco(dados: TarefaEntrada) {
   return {
     titulo: dados.titulo,
-    responsavel: dados.responsavel,
     unidadeId: dados.unidadeId,
+    responsavel: dados.responsavel,
     prioridade: dados.prioridade,
     status: dados.status,
     prazo: dados.prazo ? paraDataUTC(dados.prazo) : null,
@@ -98,11 +77,12 @@ export async function criarTarefa(
   usuarioId: string,
   dados: TarefaEntrada
 ): Promise<TarefaDTO> {
-  await validarUnidade(usuarioId, dados.unidadeId);
-
+  await validarUnidadeAtiva(usuarioId, dados.unidadeId);
+  if (!dados.unidadeId) throw erroGeral(400, "Selecione uma unidade.");
+  if (dados.status === "Concluída" && !dados.confirmarConclusao) throw erroGeral(409, "Confirme a conclusão da tarefa.");
   const linha = await prisma.tarefa.create({
-    data: { ...dadosParaBanco(dados), usuarioId },
     include: incluirUnidade,
+    data: { ...dadosParaBanco(dados), usuarioId },
   });
 
   await registrarAtividade(usuarioId, "tarefa", `Tarefa “${linha.titulo}” criada`);
@@ -116,19 +96,18 @@ export async function atualizarTarefa(
 ): Promise<TarefaDTO> {
   const existente = await prisma.tarefa.findFirst({
     where: { id, usuarioId },
-    select: { status: true, unidadeId: true },
+    select: { status: true, unidade: { select: { situacao: true } } },
   });
   if (!existente) throw erroGeral(404, "Tarefa não encontrada.");
+  exigirRegistroEditavel(existente.unidade);
 
-  // Só valida se a unidade foi trocada: manter o vínculo antigo é permitido.
-  if (dados.unidadeId !== existente.unidadeId) {
-    await validarUnidade(usuarioId, dados.unidadeId);
-  }
-
+  await validarUnidadeAtiva(usuarioId, dados.unidadeId);
+  if (!dados.unidadeId) throw erroGeral(400, "Selecione uma unidade.");
+  if (existente.status !== "Concluída" && dados.status === "Concluída" && !dados.confirmarConclusao) throw erroGeral(409, "Confirme a conclusão da tarefa.");
   const linha = await prisma.tarefa.update({
+    include: incluirUnidade,
     where: { id },
     data: dadosParaBanco(dados),
-    include: incluirUnidade,
   });
 
   const concluiuAgora =
@@ -147,9 +126,10 @@ export async function atualizarTarefa(
 export async function removerTarefa(usuarioId: string, id: string): Promise<void> {
   const existente = await prisma.tarefa.findFirst({
     where: { id, usuarioId },
-    select: { titulo: true },
+    select: { titulo: true, unidade: { select: { situacao: true } } },
   });
   if (!existente) throw erroGeral(404, "Tarefa não encontrada.");
+  exigirRegistroEditavel(existente.unidade);
 
   await prisma.tarefa.delete({ where: { id } });
   await registrarAtividade(usuarioId, "tarefa", `Tarefa “${existente.titulo}” excluída`);

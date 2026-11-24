@@ -18,7 +18,6 @@ const classes: Record<TomStatus, string> = {
 
 export const tomDocumento: Record<SituacaoDocumento, TomStatus> = {
   Vigente: "ok",
-  "Em análise": "info",
   "A vencer": "aviso",
   Vencido: "perigo",
 };
