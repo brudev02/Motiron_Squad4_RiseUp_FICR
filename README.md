@@ -34,15 +34,30 @@ A plataforma foi concebida para atender **diferentes empresas**, independentemen
 
 ---
 
+# Estrutura do Projeto
+
+```yaml
+Motiron/
+├── prisma/       # Configuração do banco de dados
+├── public/       # Arquivos estáticos
+├── src/          # Código-fonte da aplicação
+├── docs/         # Documentação do projeto
+├── .env.example  # Exemplo de configuração
+└── README.md     # Documentação principal
+```
+
+---
+
 # ⌨⚙️ Tecnologias
 
 | Tecnologia |  Utilização        |
 |------------|--------------------|
-| Next.js  |  Desenvolvimento de aplicação web  |
-| TypeScript  |  Tipagem e organização do código  |
+| **Next.js**  |  Desenvolvimento de aplicação web  |
+| **React**  |  Construção da interface e componentes  |
+| **TypeScript**  |  Tipagem e organização do código  |
+| **JavaScript**  |  Implementação de funcionalidades |
 | HTML5  |  Estrutura das páginas  |
 | CSS3  |  Estelização e responsividade  |
-| JavaScript | Recursos moderdos da linguagem  |
 
 ---
 
@@ -64,7 +79,7 @@ A plataforma foi concebida para atender **diferentes empresas**, independentemen
 
 ---
 
-# 💻 Como Executar
+# Como Executar
 
 **Pré-requisitos:** Node.js, npm e Git.
 
@@ -92,38 +107,24 @@ Verificações: `npm run lint` e `npm run build`.
 
 ---
 
-# Roadmap
+# Status do Projeto
 
-As etapas abaixo representam o planejamento de evolução do projeto. O status de cada item deverá ser atualizado conforme a implementação real da equipe.
+## ✅ Concluído
 
-## Etapas Concluidas:
+O Adgestion foi desenvolvido em equipe, em parceria com a Motiron e a FICR, como uma solução web voltada à gestão corporativa centralizada.
 
-- [x] Configuração do Next.js com TypeScript
-- [x] Definição do Design System
-- [x] Implementação de tela de login
-- [x] Implementação do Dashboard
-- [x] Implementação da Aba de Tarefas
-- [x] Implementação da Aba de Documentos
-- [x] Desenvolvimento das listagens e dos detalhes
-- [x] Implementação de recursos de acessibilidade
-- [x] Implementação das avaliações de formulários
-- [x] Controle de Status das unidades
-- [x] Confirmação de conclusão de tarefas
-- [x] Implementar cache e atualização dos dados entre telas
+O projeto representa a aplicação prática de conhecimentos em desenvolvimento web, arquitetura de software, organização de código e boas práticas de engenharia de software, além de proporcionar experiência em colaboração e desenvolvimento de soluções tecnológicas.
 
-## Melhorias planejadas
+## Equipe de desenvolvimento
 
-- [ ]  Criar uma camada de API ou servidor de dados simulados
-- [ ] Bloquear a exclusão de unidades com ducumentos pendentes ou tarefas em andamento
-- [ ] Registrar um histórico de alterações
-- [ ] Implementar modo escuro
-      
----
+Conheça os integrantes responsáveis pelo desenvolvimento do projeto:
 
-# Status
-
-## 🚧 Em desenvolvimento
-
-Projeto desenvolvido com parceria da Motiron e a FICR, com foco em Arquitetura Front-End, organização de códigos, regras de negócio e boas práticas de engenharia de software.
-
----
+|  Integrantes  |  GitHub  |
+|---------------|----------|
+|  Bruna Melo  |  [@brudev02](https://github.com/brudev02)  | 
+|  Gabriel Macedo  |  [@GabrielMacedo0974](https://github.com/GabrielMacedo0974)  |
+|  Henrique Figueira  |  [@Henriquefigueira1](https://github.com/Henriquefigueira1)  |
+|  Lukas Angell  |  [@lukasangell12](https://github.com/lukasangell12)  |
+|  José Carlos  |  [@JCcarlos-dev](https://github.com/JCcarlos-dev)  |
+|  Kauã César  |  [@DonKaua](https://github.com/DonKaua)  |
+|  Raquel vitoria  |  [@Raquelvitoriaa](https://github.com/Raquelvitoriaa)  |
