@@ -17,7 +17,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const { nome, email, senha, perfil } = parsed.data;
+    const { nome, email, senha, perfil, cpf, cnpj } = parsed.data;
+    const cpfNormalizado = perfil === "funcionario" ? cpf ?? null : null;
+    const cnpjNormalizado = perfil === "empresa" ? cnpj ?? null : null;
     const emailNormalizado = email.toLowerCase();
 
     const existe = await prisma.usuario.findUnique({
@@ -29,6 +31,13 @@ export async function POST(req: Request) {
         { erros: { email: ["E-mail já cadastrado"] } },
         { status: 409 }
       );
+    }
+
+    if (cpfNormalizado && await prisma.usuario.findUnique({ where: { cpf: cpfNormalizado } })) {
+      return NextResponse.json({ erros: { cpf: ["CPF já cadastrado"] } }, { status: 409 });
+    }
+    if (cnpjNormalizado && await prisma.usuario.findUnique({ where: { cnpj: cnpjNormalizado } })) {
+      return NextResponse.json({ erros: { cnpj: ["CNPJ já cadastrado"] } }, { status: 409 });
     }
 
     if (await senhaEmUsoPorOutraConta(senha)) {
@@ -47,11 +56,15 @@ export async function POST(req: Request) {
     const senhaHash = await bcrypt.hash(senha, 12);
 
     await prisma.usuario.create({
-      data: { nome, email: emailNormalizado, senhaHash, perfil: perfil ?? "empresa" },
+      data: { nome, email: emailNormalizado, senhaHash, perfil, cpf: cpfNormalizado, cnpj: cnpjNormalizado },
     });
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (erro) {
+    // A restrição única também cobre cadastros concorrentes.
+    if (typeof erro === "object" && erro !== null && "code" in erro && erro.code === "P2002") {
+      return NextResponse.json({ erros: { geral: ["E-mail ou documento já cadastrado."] } }, { status: 409 });
+    }
     console.error("Erro no cadastro:", erro);
     return NextResponse.json(
       { erros: { geral: ["Erro interno ao criar a conta."] } },
