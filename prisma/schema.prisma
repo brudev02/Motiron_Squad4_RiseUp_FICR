@@ -12,6 +12,8 @@ datasource db {
 model Usuario {
   id        String   @id @default(cuid())
   nome      String
+  cpf       String?  @unique
+  cnpj      String?  @unique
   email     String   @unique
   senhaHash String
   // "empresa" | "funcionario" (escolhido na etapa 1 do cadastro)
@@ -102,4 +104,12 @@ model Atividade {
   usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId, criadoEm])
+}
+
+// Controle persistente de tentativas de autenticação.
+model TentativaLogin {
+  chave        String   @id
+  tentativas   Int      @default(0)
+  inicioJanela DateTime @default(now())
+  bloqueadoAte DateTime?
 }

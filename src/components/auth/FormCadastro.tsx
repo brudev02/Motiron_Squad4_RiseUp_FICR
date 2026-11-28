@@ -13,7 +13,7 @@ type Props = {
 
 // Cadastro de uma nova conta. É independente do login: ao terminar, leva a
 // pessoa para /login (etapa 3), onde ela entra com a conta recém-criada.
-export function FormCadastro({ perfil }: Props) {
+export function FormCadastro({ perfil = "empresa" }: Props) {
   const router = useRouter();
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
@@ -50,6 +50,12 @@ export function FormCadastro({ perfil }: Props) {
         autoComplete="name"
         required
       />
+      {perfil === "funcionario" && (
+        <Campo rotulo="CPF" name="cpf" placeholder="000.000.000-00" autoComplete="off" required />
+      )}
+      {perfil === "empresa" && (
+        <Campo rotulo="CNPJ" name="cnpj" placeholder="00.000.000/0000-00" autoComplete="off" required />
+      )}
       <Campo
         rotulo="E-mail"
         type="email"
