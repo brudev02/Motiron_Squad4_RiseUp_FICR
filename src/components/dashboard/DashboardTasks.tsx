@@ -64,10 +64,9 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
 
   const editando = edicao.alvo && edicao.alvo !== "novo" ? edicao.alvo : null;
 
-  // No formulário, só aparecem unidades ativas. Ao editar, a unidade atual
-  // da tarefa continua visível (mesmo inativa) para não perder o vínculo.
+  // Apenas unidades ativas podem receber tarefas.
   const unidadesDisponiveis = unidades.filter(
-    (u) => u.situacao === "Ativa" || u.id === editando?.unidadeId
+    (u) => u.situacao === "Ativa"
   );
 
   async function confirmarExclusao() {
@@ -77,10 +76,12 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
   }
 
   function concluir(tarefa: TarefaDTO) {
+    if (tarefa.somenteLeitura || !window.confirm("Confirma a conclusão desta tarefa?")) return;
     return salvar(tarefa.id, {
       titulo: tarefa.titulo,
       responsavel: tarefa.responsavel,
       unidadeId: tarefa.unidadeId ?? "",
+      confirmarConclusao: true,
       prazo: tarefa.prazo ?? "",
       prioridade: tarefa.prioridade,
       status: "Concluída",
@@ -167,7 +168,7 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
                     <BadgeStatus tom={tomStatusTarefa[t.status]}>{t.status}</BadgeStatus>
                   </td>
                   <td className={TD}>
-                    <AcoesLinha
+                    {t.somenteLeitura ? <span>Somente leitura</span> : <AcoesLinha
                       nome={t.titulo}
                       onEditar={() => edicao.editar(t)}
                       onExcluir={() => setParaExcluir(t)}
@@ -185,7 +186,7 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
                           </button>
                         )
                       }
-                    />
+                    />}
                   </td>
                 </tr>
               ))}
@@ -211,7 +212,9 @@ export function DashboardTasks({ tarefas, unidades, abrirNovo }: Props) {
             status: valorDoCampo(d, "status"),
           })}
           onSalvar={async (dados) => {
-            const resposta = await salvar(editando?.id ?? null, dados);
+            const precisaConfirmar = dados.status === "Concluída" && editando?.status !== "Concluída";
+            if (precisaConfirmar && !window.confirm("Confirma a conclusão desta tarefa?")) return { ok: false as const, erros: { geral: "Conclusão cancelada." } };
+            const resposta = await salvar(editando?.id ?? null, { ...dados, confirmarConclusao: precisaConfirmar });
             if (resposta.ok) edicao.fechar();
             return resposta;
           }}

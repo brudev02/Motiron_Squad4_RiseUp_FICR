@@ -6,7 +6,6 @@ export type SituacaoUnidade = (typeof SITUACOES_UNIDADE)[number];
 
 export const SITUACOES_DOCUMENTO = [
   "Vigente",
-  "Em análise",
   "A vencer",
   "Vencido",
 ] as const;
@@ -22,7 +21,7 @@ export const PERFIS = ["empresa", "funcionario"] as const;
 export type Perfil = (typeof PERFIS)[number];
 
 /** Documentos que vencem em até X dias aparecem como "A vencer". */
-export const JANELA_VENCIMENTO_DIAS = 30;
+export const JANELA_VENCIMENTO_DIAS = 15;
 
 export type UnidadeDTO = {
   id: string;
@@ -40,10 +39,11 @@ export type DocumentoDTO = {
   responsavel: string;
   unidadeId: string | null;
   unidadeNome: string | null;
+  somenteLeitura: boolean;
   /** AAAA-MM-DD ou null */
   vencimento: string | null;
   emAnalise: boolean;
-  /** Situação já calculada (vencimento + análise). */
+  /** Situação já calculada (vencimento). */
   situacao: SituacaoDocumento;
   demo: boolean;
 
@@ -56,9 +56,10 @@ export type DocumentoDTO = {
 export type TarefaDTO = {
   id: string;
   titulo: string;
-  responsavel: string;
-    unidadeId: string | null;
+  unidadeId: string | null;
   unidadeNome: string | null;
+  somenteLeitura: boolean;
+  responsavel: string;
   /** AAAA-MM-DD ou null */
   prazo: string | null;
   prioridade: Prioridade;
@@ -97,6 +98,7 @@ export type Resumo = {
     aVencer: number;
     vencidos: number;
     tarefasPendentes: number;
+    pendencias: number;
     tarefasAtrasadas: number;
   };
   atividade6m: PontoAtividade[];

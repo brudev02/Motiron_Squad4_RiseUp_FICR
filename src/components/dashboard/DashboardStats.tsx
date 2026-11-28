@@ -28,20 +28,16 @@ export function DashboardStats({ totais }: { totais: Resumo["totais"] }) {
         valor={totais.aVencer}
         nota={
           totais.vencidos > 0
-            ? `${totais.vencidos} já vencido${totais.vencidos === 1 ? "" : "s"} · próximos 30 dias`
-            : "Nos próximos 30 dias"
+            ? `${totais.vencidos} já vencido${totais.vencidos === 1 ? "" : "s"} · próximos 15 dias`
+            : "Nos próximos 15 dias"
         }
         icone="relogio"
         tom={totais.aVencer + totais.vencidos > 0 ? "aviso" : "destaque"}
       />
       <CartaoIndicador
-        titulo="Tarefas pendentes"
-        valor={totais.tarefasPendentes}
-        nota={
-          totais.tarefasAtrasadas > 0
-            ? `${totais.tarefasAtrasadas} atrasada${totais.tarefasAtrasadas === 1 ? "" : "s"}`
-            : "Nenhuma atrasada"
-        }
+        titulo="Total de pendências"
+        valor={totais.pendencias}
+        nota={`${totais.tarefasPendentes} tarefas · ${totais.aVencer + totais.vencidos} documentos`}
         icone="tarefas"
         tom={totais.tarefasAtrasadas > 0 ? "perigo" : "destaque"}
       />

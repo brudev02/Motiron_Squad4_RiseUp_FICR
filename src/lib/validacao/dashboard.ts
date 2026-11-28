@@ -20,7 +20,8 @@ function texto(rotulo: string, max = 100) {
 // Data opcional no formato AAAA-MM-DD. Vazio vira null.
 const dataOpcional = z
   .string()
-  .trim()
+  .nullable()
+  .transform(v => (v ?? "").trim())
   .refine((v) => v === "" || dataValida(v), "Informe uma data válida.")
   .transform((v) => (v === "" ? null : v));
 
@@ -35,26 +36,21 @@ export const documentoSchema = z.object({
   nome: texto("Nome do documento", 150),
   responsavel: texto("Responsável"),
   // "" = sem unidade vinculada
-  unidadeId: z
-    .string()
-    .trim()
-    .transform((v) => (v === "" ? null : v)),
+  unidadeId: z.string().nullable().transform(v => v?.trim() || null),
   vencimento: dataOpcional,
-  emAnalise: z.boolean(),
+  emAnalise: z.boolean().default(false),
 });
 
 export const tarefaSchema = z.object({
+  unidadeId: z.string().trim().nullable().optional().transform(v => v || null),
+  confirmarConclusao: z.boolean().default(false),
   titulo: texto("Título da tarefa", 150),
   responsavel: texto("Responsável"),
-  // "" = sem unidade vinculada
-  unidadeId: z
-    .string()
-    .trim()
-    .transform((v) => (v === "" ? null : v)),
   prazo: dataOpcional,
   prioridade: z.enum(PRIORIDADES, { message: "Escolha uma prioridade válida." }),
   status: z.enum(STATUS_TAREFA, { message: "Escolha um status válido." }),
 });
+
 export type UnidadeEntrada = z.output<typeof unidadeSchema>;
 export type DocumentoEntrada = z.output<typeof documentoSchema>;
 export type TarefaEntrada = z.output<typeof tarefaSchema>;

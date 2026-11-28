@@ -53,7 +53,6 @@ const botaoSecundario =
 
 const tons: Record<SituacaoDocumento, string> = {
   Vigente: "bg-ok-fundo text-ok",
-  "Em análise": "bg-campo/40 text-painel",
   "A vencer": "bg-aviso-fundo text-aviso",
   Vencido: "bg-perigo-fundo text-perigo",
 };
@@ -200,12 +199,9 @@ export function DashboardDocumentsNova({
       return correspondeSituacao && (!busca || texto.includes(busca));
     });
   }, [documentos, filtro, termo]);
-  // No formulário, só aparecem unidades ativas. Ao editar, a unidade
-  // atual do documento continua visível (mesmo inativa) para não perder o vínculo.
-  const unidadesDisponiveis = unidades.filter(
-    (unidade) =>
-      unidade.situacao === "Ativa" || unidade.id === documentoEditando?.unidadeId
-  );
+
+  const unidadesDisponiveis = unidades.filter((unidade) => unidade.situacao === "Ativa");
+
   // Limpa os dados temporários ao abrir um novo cadastro.
   function abrirCadastro() {
     setDocumentoEditando(null);
@@ -313,6 +309,10 @@ export function DashboardDocumentsNova({
       return;
     }
 
+    if (unidades.some(u => u.id === formulario.unidadeId && u.situacao === "Inativa")) {
+      setErro("Unidades inativas não podem receber novos documentos.");
+      return;
+    }
     setSalvando(true);
 
     try {
@@ -349,6 +349,8 @@ export function DashboardDocumentsNova({
         setDocumentoIdSalvo(idDocumento);
       }
 
+      // O cadastro já foi persistido, mesmo se o envio do PDF falhar.
+      router.refresh();
       if (arquivoSelecionado) {
         try {
           await enviarArquivo(idDocumento, arquivoSelecionado);
@@ -685,7 +687,7 @@ export function DashboardDocumentsNova({
                     </td>
 
                     <td className="px-3 py-4">
-                      <div className="flex items-center gap-1">
+                      {documento.somenteLeitura ? <span>Somente leitura</span> : <div className="flex items-center gap-1">
                         <button
                           type="button"
                           onClick={() => abrirEdicao(documento)}
@@ -708,7 +710,7 @@ export function DashboardDocumentsNova({
                         >
                           <Icone nome="lixeira" />
                         </button>
-                      </div>
+                      </div>}
                     </td>
                   </tr>
                 ))}
@@ -811,13 +813,11 @@ export function DashboardDocumentsNova({
                 >
                   <option value="">Sem unidade vinculada</option>
 
-                  
-                {unidadesDisponiveis.map((unidade) => (
-  <option key={unidade.id} value={unidade.id}>
-    {unidade.nome}
-    {unidade.situacao === "Inativa" ? " (Inativa)" : ""}
-  </option>
-))}
+                  {unidadesDisponiveis.map((unidade) => (
+                    <option key={unidade.id} value={unidade.id}>
+                      {unidade.nome} ({unidade.situacao})
+                    </option>
+                  ))}
                 </select>
               </label>
 
@@ -843,7 +843,7 @@ export function DashboardDocumentsNova({
                   }
                   className="h-4 w-4 accent-painel"
                 />
-                Documento em análise (renovação protocolada)
+                Renovação protocolada (não altera o status de validade)
               </label>
 
               {/* Área de seleção e gerenciamento do PDF. */}

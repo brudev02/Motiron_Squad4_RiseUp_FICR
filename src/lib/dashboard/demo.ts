@@ -58,7 +58,7 @@ export async function carregarDadosExemplo(usuarioId: string): Promise<void> {
 
     for (const u of UNIDADES) {
       const criada = await tx.unidade.create({
-        data: { ...u, usuarioId, demo: true },
+        data: { ...u, situacao: "Ativa", usuarioId, demo: true },
         select: { id: true },
       });
       ids.push(criada.id);
@@ -88,6 +88,8 @@ export async function carregarDadosExemplo(usuarioId: string): Promise<void> {
         demo: true,
       })),
     });
+    // Simula desativação após a criação dos registros históricos.
+    await tx.unidade.updateMany({ where: { id: { in: UNIDADES.flatMap((u, i) => u.situacao === "Inativa" ? [ids[i]] : []) }, usuarioId }, data: { situacao: "Inativa" } });
   });
 
   await registrarAtividade(usuarioId, "sistema", "Dados de exemplo carregados");
@@ -99,7 +101,7 @@ export async function removerDadosExemplo(usuarioId: string): Promise<void> {
   await prisma.$transaction([
     prisma.documento.deleteMany({ where: { usuarioId, demo: true } }),
     prisma.tarefa.deleteMany({ where: { usuarioId, demo: true } }),
-    prisma.unidade.deleteMany({ where: { usuarioId, demo: true } }),
+    prisma.unidade.deleteMany({ where: { usuarioId, demo: true, documentos: { none: { demo: false } }, tarefas: { none: { demo: false } } } }),
   ]);
 
   await registrarAtividade(usuarioId, "sistema", "Dados de exemplo removidos");

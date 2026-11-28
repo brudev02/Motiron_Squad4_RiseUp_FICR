@@ -25,8 +25,8 @@ const indicadores: {
 }[] = [
   { titulo: "Unidades cadastradas", valor: 4, nota: "3 ativas", icone: "predio", tom: "bg-campo/40 text-painel" },
   { titulo: "Documentos ativos", valor: 6, nota: "8 monitorados no total", icone: "documento", tom: "bg-ok-fundo text-ok" },
-  { titulo: "Próximos vencimentos", valor: 2, nota: "2 já vencidos · próximos 30 dias", icone: "relogio", tom: "bg-aviso-fundo text-aviso" },
-  { titulo: "Tarefas pendentes", valor: 5, nota: "1 atrasada", icone: "tarefas", tom: "bg-perigo-fundo text-perigo" },
+  { titulo: "Próximos vencimentos", valor: 1, nota: "2 já vencidos · próximos 15 dias", icone: "relogio", tom: "bg-aviso-fundo text-aviso" },
+  { titulo: "Total de pendências", valor: 8, nota: "5 tarefas · 3 documentos", icone: "tarefas", tom: "bg-perigo-fundo text-perigo" },
 ];
 
 const concluidas = [1, 1, 2, 1, 2, 1];
@@ -39,9 +39,8 @@ const pontos: PontoAtividade[] = ultimosMeses(6, hojeISO()).map((mes, i) => ({
 }));
 
 const distribuicao: FatiaDistribuicao[] = [
-  { rotulo: "Vigente", valor: 3 },
-  { rotulo: "Em análise", valor: 1 },
-  { rotulo: "A vencer", valor: 2 },
+  { rotulo: "Vigente", valor: 5 },
+  { rotulo: "A vencer", valor: 1 },
   { rotulo: "Vencido", valor: 2 },
 ];
 
@@ -54,7 +53,6 @@ const atencao: {
   { nome: "Certificado do Corpo de Bombeiros", unidade: "Unidade Recife", prazo: "Venceu há 8 dias", situacao: "Vencido" },
   { nome: "Seguro patrimonial", unidade: "Unidade Jaboatão", prazo: "Venceu há 2 dias", situacao: "Vencido" },
   { nome: "Alvará de funcionamento", unidade: "Unidade Recife", prazo: "Vence em 12 dias", situacao: "A vencer" },
-  { nome: "Licença sanitária", unidade: "Unidade Olinda", prazo: "Vence em 24 dias", situacao: "A vencer" },
 ];
 
 const recentes: { texto: string; quando: string; icone: NomeIcone }[] = [

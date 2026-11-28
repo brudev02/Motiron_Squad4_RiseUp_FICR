@@ -248,7 +248,7 @@ export function DashboardUnits({ unidades, abrirNovo }: Props) {
       <ConfirmarAcao
         aberto={paraExcluir !== null}
         titulo="Excluir unidade"
-        descricao={`Tem certeza que deseja excluir “${paraExcluir?.nome ?? ""}”? Os documentos vinculados continuam cadastrados, mas ficam sem unidade.`}
+        descricao={`Tem certeza que deseja excluir “${paraExcluir?.nome ?? ""}”? Os documentos e tarefas vinculados continuam cadastrados, mas ficam sem unidade. Unidades inativas com registros vinculados precisam ser reativadas antes da exclusão.`}
         rotuloConfirmar="Excluir"
         pendente={ocupado}
         onConfirmar={confirmarExclusao}

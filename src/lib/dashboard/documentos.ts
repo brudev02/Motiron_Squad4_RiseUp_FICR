@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
-import { ErroApi, erroGeral } from "@/lib/api";
+import { erroGeral } from "@/lib/api";
+import { validarUnidadeAtiva, exigirRegistroEditavel } from "./unidade-regras";
 import type { DocumentoEntrada } from "@/lib/validacao/dashboard";
 import { registrarAtividade } from "./atividades";
 import { deDataUTC, hojeISO, paraDataUTC } from "./datas";
@@ -16,7 +17,7 @@ type LinhaDocumento = {
   emAnalise: boolean;
   demo: boolean;
   unidadeId: string | null;
-  unidade: { nome: string } | null;
+  unidade: { nome: string; situacao: string } | null;
 
   // Informações do PDF anexado.
   arquivoNome: string | null;
@@ -24,7 +25,7 @@ type LinhaDocumento = {
   arquivoTipo: string | null;
 };
 
-const incluirUnidade = { unidade: { select: { nome: true } } } as const;
+const incluirUnidade = { unidade: { select: { nome: true, situacao: true } } } as const;
 
 function paraDTO(linha: LinhaDocumento, hoje: string): DocumentoDTO {
   const vencimento = linha.vencimento ? deDataUTC(linha.vencimento) : null;
@@ -35,9 +36,10 @@ function paraDTO(linha: LinhaDocumento, hoje: string): DocumentoDTO {
     responsavel: linha.responsavel,
     unidadeId: linha.unidadeId,
     unidadeNome: linha.unidade?.nome ?? null,
+    somenteLeitura: linha.unidade?.situacao === "Inativa",
     vencimento,
     emAnalise: linha.emAnalise,
-    situacao: situacaoDocumento(linha.emAnalise, vencimento, hoje),
+    situacao: situacaoDocumento(vencimento, hoje),
     demo: linha.demo,
     arquivoNome: linha.arquivoNome,
     arquivoChave: linha.arquivoChave,
@@ -66,26 +68,6 @@ export const listarDocumentos = cache(
   }
 );
 
-/** A unidade escolhida precisa pertencer à mesma conta e estar ativa. */
-async function validarUnidade(usuarioId: string, unidadeId: string | null) {
-  if (!unidadeId) return;
-
-  const unidade = await prisma.unidade.findFirst({
-    where: { id: unidadeId, usuarioId },
-    select: { id: true, situacao: true },
-  });
-
-  if (!unidade) {
-    throw new ErroApi(400, { unidadeId: ["Unidade inválida."] });
-  }
-
-  if (unidade.situacao === "Inativa") {
-    throw new ErroApi(400, {
-      unidadeId: ["Não é possível vincular documentos a uma unidade inativa."],
-    });
-  }
-}
-
 function dadosParaBanco(dados: DocumentoEntrada) {
   return {
     nome: dados.nome,
@@ -100,7 +82,7 @@ export async function criarDocumento(
   usuarioId: string,
   dados: DocumentoEntrada
 ): Promise<DocumentoDTO> {
-  await validarUnidade(usuarioId, dados.unidadeId);
+  await validarUnidadeAtiva(usuarioId, dados.unidadeId);
 
   const linha = await prisma.documento.create({
     data: { ...dadosParaBanco(dados), usuarioId },
@@ -116,16 +98,14 @@ export async function atualizarDocumento(
   id: string,
   dados: DocumentoEntrada
 ): Promise<DocumentoDTO> {
-    const existente = await prisma.documento.findFirst({
+  const existente = await prisma.documento.findFirst({
     where: { id, usuarioId },
-    select: { id: true, unidadeId: true },
+    select: { id: true, unidade: { select: { situacao: true } } },
   });
   if (!existente) throw erroGeral(404, "Documento não encontrado.");
+  exigirRegistroEditavel(existente.unidade);
 
-  // Só valida se a unidade foi trocada: manter o vínculo antigo é permitido.
-  if (dados.unidadeId !== existente.unidadeId) {
-    await validarUnidade(usuarioId, dados.unidadeId);
-  }
+  await validarUnidadeAtiva(usuarioId, dados.unidadeId);
 
   const linha = await prisma.documento.update({
     where: { id },
@@ -144,10 +124,12 @@ export async function removerDocumento(usuarioId: string, id: string): Promise<v
     select: {
       nome: true,
       arquivoChave: true,
+      unidade: { select: { situacao: true } },
     },
   });
 
   if (!existente) throw erroGeral(404, "Documento não encontrado.");
+  exigirRegistroEditavel(existente.unidade);
 
   // Exclui o cadastro do banco de dados.
   await prisma.documento.delete({ where: { id } });

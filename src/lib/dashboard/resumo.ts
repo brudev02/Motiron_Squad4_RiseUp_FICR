@@ -72,6 +72,7 @@ export async function carregarResumo(usuarioId: string): Promise<Resumo> {
       aVencer,
       vencidos,
       tarefasPendentes: tarefas.filter((t) => t.status !== "Concluída").length,
+      pendencias: aVencer + vencidos + tarefas.filter(t => t.status !== "Concluída").length,
       tarefasAtrasadas: tarefas.filter((t) => t.atrasada).length,
     },
     atividade6m: atividadePorMes(tarefasComMes, ultimosMeses(6, hoje)),

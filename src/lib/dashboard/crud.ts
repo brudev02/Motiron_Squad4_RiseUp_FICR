@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import {
   exigirUsuarioApi,
@@ -37,6 +38,7 @@ export function rotasDaColecao<Entrada, Saida>(recurso: Recurso<Entrada, Saida>)
         const usuario = await exigirUsuarioApi();
         const dados = await lerEValidar(req, recurso.schema);
         const item = await recurso.criar(usuario.id, dados);
+        revalidatePath("/dashboard", "layout");
         return NextResponse.json({ item }, { status: 201 });
       } catch (erro) {
         return responderErro(erro);
@@ -54,6 +56,7 @@ export function rotasDoItem<Entrada, Saida>(recurso: Recurso<Entrada, Saida>) {
         const { id } = await contexto.params;
         const dados = await lerEValidar(req, recurso.schema);
         const item = await recurso.atualizar(usuario.id, id, dados);
+        revalidatePath("/dashboard", "layout");
         return NextResponse.json({ item });
       } catch (erro) {
         return responderErro(erro);
@@ -65,6 +68,7 @@ export function rotasDoItem<Entrada, Saida>(recurso: Recurso<Entrada, Saida>) {
         const usuario = await exigirUsuarioApi();
         const { id } = await contexto.params;
         await recurso.remover(usuario.id, id);
+        revalidatePath("/dashboard", "layout");
         return NextResponse.json({ ok: true });
       } catch (erro) {
         return responderErro(erro);
