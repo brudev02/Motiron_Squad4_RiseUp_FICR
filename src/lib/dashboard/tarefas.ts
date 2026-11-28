@@ -78,7 +78,6 @@ export async function criarTarefa(
   dados: TarefaEntrada
 ): Promise<TarefaDTO> {
   await validarUnidadeAtiva(usuarioId, dados.unidadeId);
-  if (!dados.unidadeId) throw erroGeral(400, "Selecione uma unidade.");
   if (dados.status === "Concluída" && !dados.confirmarConclusao) throw erroGeral(409, "Confirme a conclusão da tarefa.");
   const linha = await prisma.tarefa.create({
     include: incluirUnidade,
@@ -102,7 +101,6 @@ export async function atualizarTarefa(
   exigirRegistroEditavel(existente.unidade);
 
   await validarUnidadeAtiva(usuarioId, dados.unidadeId);
-  if (!dados.unidadeId) throw erroGeral(400, "Selecione uma unidade.");
   if (existente.status !== "Concluída" && dados.status === "Concluída" && !dados.confirmarConclusao) throw erroGeral(409, "Confirme a conclusão da tarefa.");
   const linha = await prisma.tarefa.update({
     include: incluirUnidade,

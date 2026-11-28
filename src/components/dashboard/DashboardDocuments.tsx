@@ -30,7 +30,7 @@ type Props = {
   abrirNovo: boolean;
 };
 
-// Gestão de documentos: validade, situação calculada (vigente, em análise,
+// Gestão de documentos: validade, situação calculada (vigente,
 // a vencer, vencido), pesquisa e filtro por situação.
 export function DashboardDocuments({ documentos, unidades, abrirNovo }: Props) {
   const { busca } = useBusca();

@@ -55,7 +55,7 @@ export function DetalheUnidade({ unidade, documentos, tarefas }: Props) {
           className="mb-4 rounded-lg border border-escuro/15 px-4 py-3 text-xs"
         >
           Esta unidade está inativa. A página está em modo somente leitura:
-          não é possível vincular novos documentos ou tarefas.
+          não é possível cadastrar, editar, excluir ou concluir registros vinculados, nem alterar anexos.
         </p>
       )}
 
@@ -105,6 +105,7 @@ export function DetalheUnidade({ unidade, documentos, tarefas }: Props) {
                   <td className={`${TD} font-medium`}>
                     {d.nome}
                     {d.demo && <SeloExemplo />}
+                    {d.arquivoChave && <Link className="ml-2 underline text-painel" href={`/api/documentos/${d.id}/arquivo`}>Visualizar PDF</Link>}
                   </td>
                   <td className={TD}>{d.responsavel}</td>
                   <td className={TD}>{formatarData(d.vencimento)}</td>
@@ -115,8 +116,9 @@ export function DetalheUnidade({ unidade, documentos, tarefas }: Props) {
           </table>
         )}
       </section>
+      {!inativa && <Link className="mb-4 inline-block text-sm underline text-painel" href="/dashboard/documentos-nova">Gerenciar documentos</Link>}
 
-            <h2 className="mb-3 text-sm font-semibold">Tarefas</h2>
+      <h2 className="mb-3 text-sm font-semibold">Tarefas</h2>
       <section className={`${CARTAO} overflow-x-auto`}>
         {tarefas.length === 0 ? (
           <EstadoVazio
@@ -155,6 +157,7 @@ export function DetalheUnidade({ unidade, documentos, tarefas }: Props) {
           </table>
         )}
       </section>
+      {!inativa && <Link className="mt-4 inline-block text-sm underline text-painel" href="/dashboard/tarefas">Gerenciar tarefas</Link>}
     </>
   );
 }

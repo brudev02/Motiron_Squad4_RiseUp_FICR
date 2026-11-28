@@ -200,6 +200,8 @@ export function DashboardDocumentsNova({
     });
   }, [documentos, filtro, termo]);
 
+  const unidadesDisponiveis = unidades.filter((unidade) => unidade.situacao === "Ativa");
+
   // Limpa os dados temporários ao abrir um novo cadastro.
   function abrirCadastro() {
     setDocumentoEditando(null);
@@ -811,8 +813,8 @@ export function DashboardDocumentsNova({
                 >
                   <option value="">Sem unidade vinculada</option>
 
-                  {unidades.map((unidade) => (
-                    <option key={unidade.id} value={unidade.id} disabled={unidade.situacao === "Inativa"}>
+                  {unidadesDisponiveis.map((unidade) => (
+                    <option key={unidade.id} value={unidade.id}>
                       {unidade.nome} ({unidade.situacao})
                     </option>
                   ))}
